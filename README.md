@@ -87,7 +87,7 @@ The overall workflow of KnowMore is shown in the figure below.
 <p align="center">
    <img src="" alt="knowmore-output" width="900">
   <br/> 
-  <i> Overall technical workflow of KnowMore that enables automated discovery from SPARC datasets. </i>
+  <i> Sample output from KnowMore. It consists of interactive text and plots display to the user.</i>
   </img>
  </p> 
 <br/>
