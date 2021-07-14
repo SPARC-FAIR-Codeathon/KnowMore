@@ -8,7 +8,7 @@
 <br />
 <p align="center">
   <a href="#">
-    <img src="https://github.com/SPARC-FAIR-Codeathon/KnowMore/blob/main/docs/kmlogo-with-text2.png" alt="Logo" height="80">
+    <img src="https://github.com/SPARC-FAIR-Codeathon/KnowMore/blob/main/docs/kmlogo-with-text3.png" alt="Logo" height="80">
   </a>
   <br/>
   <p align="center">Say "no more" to tedious manual discovery across SPARC datasets <p>
