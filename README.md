@@ -51,7 +51,7 @@ To address this problem, we have developed a tool called KnowMore for the SPARC 
    <img src="https://github.com/SPARC-FAIR-Codeathon/KnowMore/blob/main/docs/knowmore-usage-blue.png" alt="knowmore-usage" width="900">
   <br/> 
   <br/> 
-  <i> Illustration of the simple user side workflow for using KnowMore. </i>
+  <i> Illustration of the simple user side workflow of KnowMore. </i>
   </img>
  </p> 
 <br/>
@@ -67,12 +67,14 @@ A screenshot of a sample output is presented in the figure below. This output ca
 
 <br/>
 <p align="center">
-   <img src="https://github.com/SPARC-FAIR-Codeathon/KnowMore/blob/main/docs/workflow.png" alt="knowmore-output" width="900">
+   <img src="" alt="knowmore-output" width="900">
   <br/> 
-  <i> Sample output of KnowMore that is displayed to the user. </i>
+  <i> Sample output from KnowMore. It consists of interactive text and plots display to the user.</i>
   </img>
  </p> 
 <br/>
+
+
 
 
 Under the hood, KnowMore uses several Machine Learning and Data Science workflows to output the above-mentioned elements, including:
@@ -85,9 +87,9 @@ The overall workflow of KnowMore is shown in the figure below.
 
 <br/>
 <p align="center">
-   <img src="" alt="knowmore-output" width="900">
+   <img src="https://github.com/SPARC-FAIR-Codeathon/KnowMore/blob/main/docs/workflow.png" alt="knowmore-wokflow" width="900">
   <br/> 
-  <i> Sample output from KnowMore. It consists of interactive text and plots display to the user.</i>
+  <i> Overall technical workflow of KnowMore. The red blocks highlight major code that has been developed during this Codeathon. </i>
   </img>
  </p> 
 <br/>
