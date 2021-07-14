@@ -56,7 +56,7 @@ To address this problem, we have developed a tool called KnowMore for the SPARC 
  </p> 
 <br/>
 
-The output of KnowMore consists of multiple items displayed to the user: 
+The output of KnowMore consists of multiple interactive items displayed to the user: 
 1. Common keywords describing the datasets
 2. An automated summary paragraph of the combined datasets
 3. A knowledge graph
