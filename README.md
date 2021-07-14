@@ -67,7 +67,7 @@ A screenshot of a sample output is presented in the figure below. This output ca
 
 <br/>
 <p align="center">
-   <img src="" alt="knowmore-output" width="900">
+   <img src="https://github.com/SPARC-FAIR-Codeathon/KnowMore/blob/main/docs/workflow.png" alt="knowmore-output" width="900">
   <br/> 
   <i> Sample output of KnowMore that is displayed to the user. </i>
   </img>
@@ -82,6 +82,16 @@ Under the hood, KnowMore uses several Machine Learning and Data Science workflow
 
 ## Workflow
 The overall workflow of KnowMore is shown in the figure below. 
+
+<br/>
+<p align="center">
+   <img src="" alt="knowmore-output" width="900">
+  <br/> 
+  <i> Overall technical workflow of KnowMore that enables automated discovery from SPARC datasets. </i>
+  </img>
+ </p> 
+<br/>
+
 
 
 ## Using KnowMore
