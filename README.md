@@ -62,7 +62,8 @@ The output of KnowMore consists of multiple items displayed to the user:
 3. A knowledge graph
 4. Clustering of similar images (if images are included in the datasets)
 5. Correlation between measured quantities (if tabular data is included in the datasets). 
-A screenshot of a sample output is presented in the figure below. This output provides a foundation to the user for rapidly identifying potential relations or previously unknown correlation between the data and proceed accordingly in their investigation.
+
+A screenshot of a sample output is presented in the figure below. This output can provide a foundation to the user for rapidly identifying potential relations or previously unknown correlations between the data and proceed accordingly in their investigation.
 
 <br/>
 <p align="center">
@@ -85,11 +86,12 @@ The overall workflow of KnowMore is shown in the figure below.
 
 ## Using KnowMore
 You can use KnowMore directly on our fork of the SPARC Data Portal: (add link)
+
 Follow the steps described below:
-1. Browse datasets click on the "Add to automated discovery" button, visible in the header of the datasets, to add the datasets on interest into the KnowMore analysis 
+1. Find datasets of interest and click on the "Add to automated discovery" button, visible in the header of the datasets, to add each of them in the KnowMore analysis 
 2. Go to the KnowMore tab, and check that all your selected datasets are listed
 3. Click on "Discover" to initiate the automated discovery process
-4. Wait until the interactive results are discplayed
+4. Wait until the interactive results are displayed
 
 ## Using the Source Code
 
