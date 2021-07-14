@@ -55,13 +55,23 @@ To address this problem, we have developed a tool called KnowMore for the SPARC 
  </p> 
 <br/>
 
-The output consists of multiple items generated from a joint analysis of all the datasets: 
-1. Common keywords describing the dataset
+The output of KnowMore consists of multiple items displayed to the user: 
+1. Common keywords describing the datasets
 2. An automated summary paragraph of the combined datasets
 3. A knowledge graph
 4. Clustering of similar images (if images are included in the datasets)
 5. Correlation between measured quantities (if tabular data is included in the datasets). 
 A screenshot of a sample output is presented in the figure below. This output provides a foundation to the user for rapidly identifying potential relations or previously unknown correlation between the data and proceed accordingly in their investigation.
+
+<br/>
+<p align="center">
+   <img src="" alt="knowmore-output" width="900">
+  <br/> 
+  <i> Sample output of KnowMore that is displayed to the user. </i>
+  </img>
+ </p> 
+<br/>
+
 
 Under the hood, KnowMore uses several Machine Learning and Data Science workflows to output the above-mentioned elements:
 *	Natural Language Processing
