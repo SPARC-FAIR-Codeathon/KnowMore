@@ -27,7 +27,7 @@
 * [About](#about)
 * [The Problem](#the-problem)
 * [Our Solution - KnowMore](#our-solution---knowmore)
-* [Worflow](#worflow)
+* [Workflow](#workflow)
 * [Using KnowMore](#using-knowmore)
 * [Using the Source Code](#using-the-source-code)
 * [License](#license)
@@ -68,7 +68,7 @@ Under the hood, KnowMore uses several Machine Learning and Data Science workflow
 *	Image classification
 *	Correlation matrix
 
-## Worflow
+## Workflow
 The overall workflow of KnowMore is shown in the figure below. 
 
 
