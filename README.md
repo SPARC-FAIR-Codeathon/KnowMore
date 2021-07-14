@@ -74,7 +74,7 @@ A screenshot of a sample output is presented in the figure below. This output pr
 <br/>
 
 
-Under the hood, KnowMore uses several Machine Learning and Data Science workflows to output the above-mentioned elements:
+Under the hood, KnowMore uses several Machine Learning and Data Science workflows to output the above-mentioned elements, including:
 *	Natural Language Processing
 *	Image classification
 *	Correlation matrix
