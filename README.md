@@ -50,6 +50,7 @@ To address this problem, we have developed a tool called KnowMore for the SPARC 
 <p align="center">
    <img src="https://github.com/SPARC-FAIR-Codeathon/KnowMore/blob/main/docs/knowmore-usage-blue.png" alt="knowmore-usage" width="900">
   <br/> 
+  <br/> 
   <i> Illustration of the simple user side workflow for using KnowMore. </i>
   </img>
  </p> 
