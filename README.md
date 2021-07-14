@@ -70,9 +70,6 @@ Under the hood, KnowMore uses several Machine Learning and Data Science workflow
 *	Image classification (item #4)
 *	Correlation matrix (item #5)
 
-
-
-
 ## Worflow
 The overall workflow of KnowMore is shown in the figure below. 
 
