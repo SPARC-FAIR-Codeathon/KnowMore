@@ -10,14 +10,11 @@
   <a href="#">
     <img src="https://github.com/SPARC-FAIR-Codeathon/KnowMore/blob/main/docs/kmlogo-with-text.png" alt="Logo" height="80">
   </a>
-
-  <h3 align="center">Say "no more" to tedious manual discovery across SPARC datasets </h3>
+  <br/>
+  <p align="center">Say "no more" to tedious manual discovery across SPARC datasets <p>
 
   <p align="center">
      <br/>
-   <i>  </i>
-    <br />
-    <br />
     <a href="https://github.com/bvhpatel/SODA/issues">Report Issue</a>
     ·
     <a href="https://docs.google.com/forms/d/e/1FAIpQLSfyUw2_NI1-2tlAr8oB5_JcJ_yjTB-zUDt9skfGjNU9qjITwg/viewform?ts=5e433bea">Submit feedback </a>
