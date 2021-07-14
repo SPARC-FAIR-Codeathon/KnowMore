@@ -98,3 +98,14 @@ KnowMore is distributed under the MIT License. See [LICENSE](https://github.com/
 * [Matthew Schiefer](https://github.com/schiefma/) (Writer - Manuscript)
 
 ## Acknowledgements
+
+
+
+[contributors-shield]: https://img.shields.io/github/contributors/SPARC-FAIR-Codeathon/KnowMore.svg?style=flat-square
+[contributors-url]: https://github.com/SPARC-FAIR-Codeathon/KnowMore/graphs/contributors
+[stars-shield]: https://img.shields.io/github/stars/SPARC-FAIR-Codeathon/KnowMore.svg?style=flat-square
+[stars-url]: https://github.com/SPARC-FAIR-Codeathon/KnowMore/stargazers
+[issues-shield]: https://img.shields.io/github/issues/SPARC-FAIR-Codeathon/KnowMore.svg?style=flat-square
+[issues-url]: https://github.com/SPARC-FAIR-Codeathon/KnowMore/issues
+[license-shield]: https://img.shields.io/github/license/SPARC-FAIR-Codeathon/KnowMore.svg?style=flat-square
+[license-url]: https://github.com/SPARC-FAIR-Codeathon/KnowMore/blob/master/LICENSE
