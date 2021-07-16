@@ -17,7 +17,7 @@
      <br/>
     <a href="https://github.com/bvhpatel/SODA/issues">Report Issue</a>
     ·
-    <a href="https://docs.google.com/forms/d/e/1FAIpQLSfyUw2_NI1-2tlAr8oB5_JcJ_yjTB-zUDt9skfGjNU9qjITwg/viewform?ts=5e433bea">Submit feedback </a>
+    <a href="comingsoon">Submit feedback </a>
   </p>
 </p>
 
