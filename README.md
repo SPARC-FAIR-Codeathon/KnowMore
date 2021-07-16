@@ -87,7 +87,7 @@ The overall workflow of KnowMore is shown in the figure below.
 
 <br/>
 <p align="center">
-   <img src="https://github.com/SPARC-FAIR-Codeathon/KnowMore/blob/main/docs/workflow.png" alt="knowmore-wokflow" width="900">
+   <img src="https://github.com/SPARC-FAIR-Codeathon/KnowMore/blob/main/docs/workflow.png" alt="knowmore-workflow" width="900">
   <br/> 
   <i> Overall technical workflow of KnowMore. The red blocks highlight major code that has been developed during this Codeathon. </i>
   </img>
