@@ -16,7 +16,7 @@ def set_routes(app):
     @cross_origin(origin="*")
     @app.route('/')
     def index():
-        return "api for know more"
+        return "status: up"
 
     @app.route('/test/', methods=['GET'])
     def test():
