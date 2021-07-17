@@ -28,7 +28,7 @@ Then change according to your environment
 
 ### start flask server
 ```sh
-flask run --host=www.local.test
+flask run 
 ```
 
 or if you require remote access: (NOTE untested)
