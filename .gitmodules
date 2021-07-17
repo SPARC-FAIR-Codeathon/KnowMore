@@ -1,0 +1,3 @@
+[submodule "sparc-app"]
+	path = sparc-app
+	url = git@github.com:RyanQuey/sparc-app.git
