@@ -1,6 +1,6 @@
 from flask import Flask, url_for, render_template, send_from_directory, request
 from flask_cors import CORS, cross_origin
-from app.osparc.job import check_job_status, start_osparc_job
+from app.osparc import job_api
 import os
 
 
@@ -26,7 +26,7 @@ def set_routes(app):
 
     @app.route('/api/start-osparc-job/', methods=['POST'])
     def create_job():
-        result = start_osparc_job(request)
+        result = job_api.start_osparc_job(request)
 
         return result
 
@@ -37,7 +37,7 @@ def set_routes(app):
         if job_id == "":
             return "Job ID is required"
 
-        result = check_job_status(job_id)
+        result = job_api.check_job_status(job_id)
 
         return result
 
