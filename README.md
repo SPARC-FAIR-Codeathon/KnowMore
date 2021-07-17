@@ -67,7 +67,7 @@ A screenshot of a sample output is presented in the figure below. This output ca
 
 <br/>
 <p align="center">
-   <img src="" alt="knowmore-output" width="900">
+   <img src="" alt="coming-soon..." width="900">
   <br/> 
   <i> Sample output from KnowMore. It consists of interactive text and plots display to the user.</i>
   </img>
