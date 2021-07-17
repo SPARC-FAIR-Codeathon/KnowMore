@@ -76,6 +76,9 @@ docker build -t flask-for-podcast-image .
 docker run --name flask-for-podcast-tool -p 5000:5000 flask-for-podcast-image:latest
 ```
 
+# TODOs
+- use production server, rather than dev server
+
 # Debugging
 ## Helpful scripts
 ### Test connection to osparc

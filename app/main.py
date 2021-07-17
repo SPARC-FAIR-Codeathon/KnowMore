@@ -11,7 +11,7 @@ config(app)
 set_routes(app)
 
 # heroku requires using env var for port
-port = .get("PORT", "5000")
+port = os.environ.get("PORT", "5000")
 # actually doesn't run when in docker, and actualy shouldn't (hence why the conditional is there)
 if __name__ == "__main__":
     # Only for debugging while developing
