@@ -6,7 +6,7 @@ from app.routes import set_routes
 
 app=Flask(__name__)
 app.config['CORS_HEADERS'] = 'Content-Type'
-#CORS(app)
+CORS(app)
 config(app)
 set_routes(app)
 

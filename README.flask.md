@@ -44,6 +44,12 @@ flask run --host=0.0.0.0
 ### View your flask app
 http://127.0.0.1:5000/
 
+# Deploy
+
+```
+git push heroku main
+```
+
 # Develop
 ## Start in Docker
 **NOTE: HASN'T BEEN TESTED RECENTLY**
