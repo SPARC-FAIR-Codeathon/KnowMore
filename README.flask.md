@@ -2,6 +2,10 @@
 ![architecture diagram](/docs/knowmore.osparc-integration.png)
 
 # Setup
+Clone the repo and submodules
+```
+git clone https://github.com/SPARC-FAIR-Codeathon/KnowMore.git --recurse
+```
 ## Setup Flask
 ### cd into this folder
 
