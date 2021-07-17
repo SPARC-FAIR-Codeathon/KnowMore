@@ -3,6 +3,7 @@ import requests
 import os
 import json
 import time
+import osparc
 from osparc.api import FilesApi, SolversApi
 from osparc.models import File, Job, JobInputs, JobOutputs, JobStatus, Solver
 
@@ -14,7 +15,8 @@ cfg = osparc.Configuration(
     password=OSPARC_API_SECRET,
 )
 
-assets_dir = os.path(os.path.abspath(os.getcwd()), "assets)"
+working_dir = os.path.abspath(os.getcwd())
+assets_dir = os.path.join(working_dir, "assets")
 
 def start_osparc_job(req):
     """

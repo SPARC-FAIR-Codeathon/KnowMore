@@ -4,7 +4,7 @@ from flask_cors import CORS
 from app.settings import config
 from app.routes import set_routes
 
-app=Flask(__name__, static_folder='app/gatsby/public', template_folder='app/gatsby/public')
+app=Flask(__name__)
 app.config['CORS_HEADERS'] = 'Content-Type'
 CORS(app)
 config(app)

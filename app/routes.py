@@ -12,29 +12,37 @@ def set_routes(app):
     ####################################
     # Routes
 
+    # TODO should only be our frontend server really
     @cross_origin(origin='*')
     @app.route('/')
     def index():
-        return "home page. Nothing here yet, but check out <a href='/search'>Search</a>"
+        return "home page. Nothing here yet, but check out <a href='/api/check-osparc-job/1'>Search</a>"
 
-    @app.route('/api/start-osparc-job', methods=['POST'])
+    @app.route('/test/', methods=['GET'])
+    def test():
+
+        return "test"
+
+
+    @app.route('/api/start-osparc-job/', methods=['POST'])
     def create_job():
         result = start_osparc_job(request)
 
         return result
 
-    return app
 
-    @app.route('/api/check-osparc-job/<job_id>', methods=['GET'])
+    @app.route('/api/check-osparc-job/', defaults={'job_id': ""}, methods=['GET'])
+    @app.route('/api/check-osparc-job/<string:job_id>', methods=['GET'])
     def check_job_status(job_id):
+        if job_id == "":
+            return "Job ID is required"
+
         result = check_job_status(job_id)
 
         return result
 
 
     #######################
-
-
 
     return app
 
