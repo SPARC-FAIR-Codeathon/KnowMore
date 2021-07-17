@@ -44,6 +44,12 @@ flask run --host=0.0.0.0
 ### View your flask app
 http://127.0.0.1:5000/
 
+## Test mode
+Want to develop without starting tons of osparc jobs? 
+
+set env var (to anything other than string 'false')
+OSPARC_TEST_MODE=true
+
 # Deploy
 
 ```

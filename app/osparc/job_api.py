@@ -9,6 +9,7 @@ from osparc.models import File, Job, JobInputs, JobOutputs, JobStatus, Solver
 
 OSPARC_API_KEY = os.environ.get("OSPARC_API_KEY")
 OSPARC_API_SECRET = os.environ.get("OSPARC_API_SECRET")
+OSPARC_TEST_MODE = os.environ.get("OSPARC_TEST_MODE", "false") != "false"
 
 cfg = osparc.Configuration(
     username=OSPARC_API_KEY,
@@ -28,6 +29,16 @@ def start_osparc_job(req):
     print(req)
     print("data as received:", req.data)
     print("json:", req.json)
+
+    if OSPARC_TEST_MODE:
+        # return false job ID
+        payload = {
+            "job_id": "fake-job-for-testing",
+            "status_code": 200,
+        }
+
+        resp = make_response(json.dumps(payload), payload["status_code"])
+        return resp
 
 
     with osparc.ApiClient(cfg) as api_client:
@@ -79,6 +90,25 @@ def check_job_status(job_id):
     # what we're returning to requester
     payload = {}
 
+    if OSPARC_TEST_MODE or job_id == "fake-job-for-testing":
+        # this is test mode, send back sucessful and mock data
+
+
+        payload = {
+            "download_path": "fake-path",
+            "outputs": ["fake-output1", "fake-output2"],
+            "finished": True,
+            "progress_percent": 100,
+            "success": True,
+            "job_id": job_id,
+            "job_state": "SUCCESS",
+            "status_code": 200,
+        }
+        resp = make_response(json.dumps(payload), payload["status_code"])
+        return resp
+
+
+    # Ok, now for real mode:
     try:
         with osparc.ApiClient(cfg) as api_client:
             solvers_api, solver = setup_solver(api_client)

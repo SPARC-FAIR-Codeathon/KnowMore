@@ -13,19 +13,18 @@ def set_routes(app):
     # Routes
 
     # TODO should only be our frontend server really
-    @cross_origin(origin=CLIENT_URL)
     @app.route('/')
     def index():
         return "home page. Nothing here yet, but check out <a href='/api/check-osparc-job/1'>Search</a>"
 
-    @cross_origin(origin='*')
     @app.route('/test/', methods=['GET'])
     def test():
 
         return "test"
 
 
-    @cross_origin(origin=CLIENT_URL)
+    # letting cors get setup in settings.py instead
+    #@cross_origin(origin=CLIENT_URL)
     @app.route('/api/start-osparc-job/', methods=['POST'])
     def create_job():
         result = job_api.start_osparc_job(request)
@@ -33,7 +32,8 @@ def set_routes(app):
         return result
 
 
-    @cross_origin(origin=CLIENT_URL)
+    # letting cors get setup in settings.py instead
+    #@cross_origin(origin=CLIENT_URL)
     @app.route('/api/check-osparc-job/', defaults={'job_id': ""}, methods=['GET'])
     @app.route('/api/check-osparc-job/<string:job_id>', methods=['GET'])
     def check_job_status(job_id):
