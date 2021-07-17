@@ -19,7 +19,7 @@ cfg = osparc.Configuration(
 
 
 current_dir = pathlib.Path(__file__).parent.resolve()
-assets_dir = os.path.join(current_dir, "../..", "/assets")
+assets_dir = os.path.join(current_dir, "../..", "assets")
 
 def start_osparc_job(req):
     """
