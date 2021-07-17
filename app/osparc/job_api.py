@@ -6,6 +6,7 @@ import time
 import osparc
 from osparc.api import FilesApi, SolversApi
 from osparc.models import File, Job, JobInputs, JobOutputs, JobStatus, Solver
+import pathlib
 
 OSPARC_API_KEY = os.environ.get("OSPARC_API_KEY")
 OSPARC_API_SECRET = os.environ.get("OSPARC_API_SECRET")
@@ -16,8 +17,9 @@ cfg = osparc.Configuration(
     password=OSPARC_API_SECRET,
 )
 
-working_dir = os.path.abspath(os.getcwd())
-assets_dir = os.path.join(working_dir, "assets")
+
+current_dir = pathlib.Path(__file__).parent.resolve()
+assets_dir = os.path.join(current_dir, "../.. "/assets")
 
 def start_osparc_job(req):
     """
