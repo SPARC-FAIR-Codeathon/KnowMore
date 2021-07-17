@@ -1,4 +1,5 @@
 from flask import Flask, url_for, render_template, send_from_directory, request
+from flask import make_response
 from flask_cors import CORS, cross_origin
 from app.osparc import job_api
 import os
@@ -28,9 +29,12 @@ def set_routes(app):
     #@cross_origin(origin=CLIENT_URL)
     @app.route('/api/start-osparc-job/', methods=['POST'])
     def create_job():
-        result = job_api.start_osparc_job(request)
+        print("data as received:", request.data)
+        print("json:", request.json)
 
-        return result
+        payload = job_api.start_osparc_job(request)
+        resp = make_response(json.dumps(payload), payload["status_code"])
+        return resp
 
 
     # letting cors get setup in settings.py instead
@@ -41,9 +45,9 @@ def set_routes(app):
         if job_id == "":
             return "Job ID is required"
 
-        result = job_api.check_job_status(job_id)
-
-        return result
+        payload = job_api.check_job_status(job_id)
+        resp = make_response(json.dumps(payload), payload["status_code"])
+        return resp
 
 
     #######################

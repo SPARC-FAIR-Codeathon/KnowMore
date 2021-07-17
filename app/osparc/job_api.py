@@ -1,4 +1,3 @@
-from flask import make_response
 import requests
 import os
 import json
@@ -21,16 +20,13 @@ cfg = osparc.Configuration(
 current_dir = pathlib.Path(__file__).parent.resolve()
 assets_dir = os.path.join(current_dir, "../..", "assets")
 
-def start_osparc_job(req):
+def start_osparc_job(data):
     """
     creates job in osparc server
 
+    @param data ....nothing yet. But it is what we receive from frontend
     @return job info
     """
-
-    print(req)
-    print("data as received:", req.data)
-    print("json:", req.json)
 
     if OSPARC_TEST_MODE:
         # return false job ID
@@ -39,8 +35,7 @@ def start_osparc_job(req):
             "status_code": 200,
         }
 
-        resp = make_response(json.dumps(payload), payload["status_code"])
-        return resp
+        return payload
 
 
     with osparc.ApiClient(cfg) as api_client:
@@ -75,8 +70,7 @@ def start_osparc_job(req):
                 "status_code": 500,
             }
 
-        resp = make_response(json.dumps(payload), payload["status_code"])
-        return resp
+        return payload
 
 
 def check_job_status(job_id):
@@ -106,8 +100,7 @@ def check_job_status(job_id):
             "job_state": "SUCCESS",
             "status_code": 200,
         }
-        resp = make_response(json.dumps(payload), payload["status_code"])
-        return resp
+        return payload
 
 
     # Ok, now for real mode:
@@ -197,8 +190,7 @@ def check_job_status(job_id):
 
     print("payload: ", payload)
 
-    resp = make_response(json.dumps(payload), payload["status_code"])
-    return resp
+    return payload
 
 
 ####################
