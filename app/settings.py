@@ -10,6 +10,7 @@ def config(app):
     _mail_enabled = os.environ.get("MAIL_ENABLED", "true")
     MAIL_ENABLED = _mail_enabled.lower() in {"1", "t", "true"}
 
+    CLIENT_URL = os.environ.get("CLIENT_URL", "http://localhost:3000")
     SECRET_KEY = os.environ.get("SECRET_KEY")
 
     if not SECRET_KEY:
@@ -29,13 +30,14 @@ def config(app):
     # cross origin.
     # TODO consider adding supports_credentials=True, to allow sending cookies cross-origin also
 
-    # CORS(app, resources={
-    #     # this will also allow e.g., /search for searchkit
-    #     r'/*': {"origins": "*"}
-    #     #r'/api/*': {"origins": "*"}
-    #     # r'/api/*': {"origins": [CLIENT_URL]}
-    # })
-    CORS(app)
+    print("accepting cors from", CLIENT_URL)
+    CORS(app, resources={
+        # this will also allow e.g., /search for searchkit
+        #r'/*': {"origins": "*"}
+        r"/*": {"origins": [CLIENT_URL]}
+        #r"/api/*": {"origins": "*"}
+    })
+    # CORS(app)
 
 
     app.config.update(

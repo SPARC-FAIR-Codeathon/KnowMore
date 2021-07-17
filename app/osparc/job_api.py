@@ -27,13 +27,12 @@ def start_osparc_job(req):
 
     print(req)
     print("data as received:", req.data)
-    print("ES json:", req.json)
-    data_json = json.dumps(req.json)
+    print("json:", req.json)
 
 
     with osparc.ApiClient(cfg) as api_client:
         files_api = FilesApi(api_client)
-        input_file1: File = files_api.upload_file(file=f"{assets_dir}/requirements-for-osparc.zip")
+        input_file1: File = files_api.upload_file(file=f"{assets_dir}/requirements-for-osparc.current.zip")
         input_file2: File = files_api.upload_file(file=f"{assets_dir}/INPUT_FOLDER/input.xlsx")
 
         solvers_api, solver = setup_solver(api_client)
@@ -50,18 +49,21 @@ def start_osparc_job(req):
                 ),
             )
 
+            print("job we got", job)
             payload = {
-                "job": job,
+                "job_id": job.id,
+                "status_code": 200,
             }
 
-            # resp = make_response(payload.json(), payload.status_code)
         except Exception as e:
             print(e)
             payload = {
                 "error": e,
+                "status_code": 500,
             }
 
-        resp = make_response(json.dump(payload), payload.status_code)
+        resp = make_response(json.dumps(payload), payload["status_code"])
+        return resp
 
 
 def check_job_status(job_id):
