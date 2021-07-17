@@ -1,3 +1,6 @@
+# Overview
+![architecture diagram](/docs/knowmore.osparc-integration.png)
+
 # Setup
 ## Setup Flask
 ### cd into this folder
