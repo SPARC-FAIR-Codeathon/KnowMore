@@ -13,9 +13,10 @@ def set_routes(app):
     # Routes
 
     # TODO should only be our frontend server really
+    @cross_origin(origin="*")
     @app.route('/')
     def index():
-        return "home page. Nothing here yet, but check out <a href='/api/check-osparc-job/1'>Search</a>"
+        return "api for know more"
 
     @app.route('/test/', methods=['GET'])
     def test():
