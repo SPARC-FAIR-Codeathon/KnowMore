@@ -28,6 +28,9 @@ def start_osparc_job(data):
     @return job info
     """
 
+    print(osparc.__version__)
+    print(cfg.host)
+
     if OSPARC_TEST_MODE:
         # return false job ID
         payload = {
@@ -203,5 +206,6 @@ def setup_solver(api_client):
     solver: Solver = solvers_api.get_solver_release(
         "simcore/services/comp/osparc-python-runner", "1.2.0"
     )
+    print(solver.id, solver.version)
 
     return [solvers_api, solver]
