@@ -6,6 +6,8 @@ import osparc
 from osparc.api import FilesApi, SolversApi
 from osparc.models import File, Job, JobInputs, JobOutputs, JobStatus, Solver
 import pathlib
+import zipfile
+from pathlib import Path
 
 OSPARC_API_KEY = os.environ.get("OSPARC_API_KEY")
 OSPARC_API_SECRET = os.environ.get("OSPARC_API_SECRET")
@@ -16,6 +18,7 @@ cfg = osparc.Configuration(
     password=OSPARC_API_SECRET,
 )
 
+osparc_extracted_tmp_path = "/tmp/osparc-extracted/"
 
 current_dir = pathlib.Path(__file__).parent.resolve()
 assets_dir = os.path.join(current_dir, "../..", "assets")
@@ -42,14 +45,12 @@ def start_osparc_job(data):
 
 
     with osparc.ApiClient(cfg) as api_client:
-        files_api = FilesApi(api_client)
+        solvers_api, solver, files_api = setup_api(api_client)
         input_file1: File = files_api.upload_file(file=f"{assets_dir}/requirements-for-osparc.current.zip")
         #input_file2: File = files_api.upload_file(file=f"{assets_dir}/INPUT_FOLDER/input.xlsx")
         # TODO remove
         # testing teh zip
         input_file2: File = files_api.upload_file(file=f"{assets_dir}/INPUT_FOLDER/input.zip")
-
-        solvers_api, solver = setup_solver(api_client)
 
         try:
             job: Job = solvers_api.create_job(
@@ -117,7 +118,7 @@ def check_job_status(job_id):
     # Ok, now for real mode:
     try:
         with osparc.ApiClient(cfg) as api_client:
-            solvers_api, solver = setup_solver(api_client)
+            solvers_api, solver, files_api = setup_api(api_client)
             status = solvers_api.inspect_job(solver.id, solver.version, job_id)
             print("solver info:", solver.id, solver.version)
 
@@ -133,7 +134,7 @@ def check_job_status(job_id):
 
             if status.state == "SUCCESS":
                 outputs: JobOutputs = solvers_api.get_job_outputs(solver.id, solver.version, job_id)
-                print(f"Job {outputs.job_id} got these results:")
+                print(f"SUCCESS: Job {outputs.job_id} got these results:")
 
                 for output_name, result in outputs.results.items():
                     print(output_name, "=", result)
@@ -145,13 +146,32 @@ def check_job_status(job_id):
                 # 'filename': 'single_number.txt',
                 # 'id': '9fb4f70e-3589-3e9e-991e-3059086c3aae'}
                 # output_2 = 4.0
+                print(f"Now downloading to disk path:")
                 results_file: File = outputs.results["output_1"]
+                print(f"file id: {results_file.id}")
                 download_path: str = files_api.download_file(file_id=results_file.id)
-                print(Path(download_path).read_text())
+                
+                print(f"Download path: {download_path}")
+                Path(osparc_extracted_tmp_path).mkdir(parents=True, exist_ok=True)
+
+                # dir where the outputs will be written 
+                tmp_dir_path_for_job_outputs = os.path.join(osparc_extracted_tmp_path, job_id)
+                with zipfile.ZipFile(download_path, 'r') as zip_ref:
+                    zip_ref.extractall(tmp_dir_path_for_job_outputs)
+
+                # file to read
+                # right now assuming just that one file
+                # would just make a loop for doing multiple files
+                final_file_path = os.path.join(tmp_dir_path_for_job_outputs, "my_output_file.txt")
+                plaintext_response = Path(final_file_path).read_text()
+                print(plaintext_response)
 
                 payload = {
                     "download_path": download_path,
-                    "outputs": outputs,
+                    "outputs": {
+                        "output1": plaintext_response,
+                        # for other files, add more here probably
+                    },
                     "finished": True,
                     "progress_percent": status.progress,
                     "success": True,
@@ -186,18 +206,23 @@ def check_job_status(job_id):
 
     except osparc.exceptions.ApiException as e:
         # exception returned by osparc
+        print("OSPARC ERROR:")
         print(e)
         payload = {
+            "osparc_error": true,
             "error": str(e.body),
             "status_code": 500,
+            "finished": True,
         }
 
     except Exception as e:
         # any other exception
+        print("INTERNAL FLASK SERVER ERROR:")
         print(e)
         payload = {
             "error": str(e.__class__),
             "status_code": 500,
+            "finished": True,
         }
 
     print("payload: ", payload)
@@ -207,7 +232,7 @@ def check_job_status(job_id):
 
 ####################
 # helpers
-def setup_solver(api_client):
+def setup_api(api_client):
     """
     helper code to get solver metadata
     """
@@ -215,6 +240,7 @@ def setup_solver(api_client):
     solver: Solver = solvers_api.get_solver_release(
         "simcore/services/comp/osparc-python-runner", "1.2.0"
     )
+    files_api = FilesApi(api_client)
     print(solver.id, solver.version)
 
-    return [solvers_api, solver]
+    return [solvers_api, solver, files_api]
