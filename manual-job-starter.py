@@ -17,5 +17,4 @@ while not done:
     result = job_api.check_job_status(job_id)
     done = result["finished"]
 
-    print(result)
     time.sleep(10)

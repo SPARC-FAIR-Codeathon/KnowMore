@@ -44,7 +44,10 @@ def start_osparc_job(data):
     with osparc.ApiClient(cfg) as api_client:
         files_api = FilesApi(api_client)
         input_file1: File = files_api.upload_file(file=f"{assets_dir}/requirements-for-osparc.current.zip")
-        input_file2: File = files_api.upload_file(file=f"{assets_dir}/INPUT_FOLDER/input.xlsx")
+        #input_file2: File = files_api.upload_file(file=f"{assets_dir}/INPUT_FOLDER/input.xlsx")
+        # TODO remove
+        # testing teh zip
+        input_file2: File = files_api.upload_file(file=f"{assets_dir}/INPUT_FOLDER/input.zip")
 
         solvers_api, solver = setup_solver(api_client)
 
@@ -60,11 +63,13 @@ def start_osparc_job(data):
                 ),
             )
 
+            status: JobStatus = solvers_api.start_job(solver.id, solver.version, job.id)
             print("job we got", job)
             payload = {
                 "job_id": job.id,
                 "status_code": 200,
             }
+
 
         except Exception as e:
             print(e)
@@ -111,6 +116,7 @@ def check_job_status(job_id):
         with osparc.ApiClient(cfg) as api_client:
             solvers_api, solver = setup_solver(api_client)
             status = solvers_api.inspect_job(solver.id, solver.version, job_id)
+            print("solver info:", solver.id, solver.version)
 
             # just check progress
             if not status.stopped_at:
