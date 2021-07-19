@@ -66,6 +66,11 @@ def start_osparc_job(data):
                 "status_code": 200,
             }
 
+            # starting job after creation
+            status: JobStatus = solvers_api.start_job(solver.id, solver.version, job.id)
+            print("start_job result", status)
+
+
         except Exception as e:
             print(e)
             payload = {
