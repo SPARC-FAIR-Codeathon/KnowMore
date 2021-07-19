@@ -63,8 +63,11 @@ def start_osparc_job(data):
                 ),
             )
 
-            status: JobStatus = solvers_api.start_job(solver.id, solver.version, job.id)
             print("job we got", job)
+
+            # starting job after creation
+            status: JobStatus = solvers_api.start_job(solver.id, solver.version, job.id)
+            print("start_job result", status)
             payload = {
                 "job_id": job.id,
                 "status_code": 200,
