@@ -32,7 +32,8 @@ def set_routes(app):
         print("data as received:", request.data)
         print("json:", request.json)
 
-        payload = job_api.start_osparc_job(request)
+        payload = job_api.start_osparc_job(request.data)
+
         resp = make_response(json.dumps(payload), payload["status_code"])
         return resp
 
