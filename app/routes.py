@@ -40,7 +40,6 @@ def set_routes(app):
 
 
     # letting cors get setup in settings.py instead
-    #@cross_origin(origin=CLIENT_URL)
     @app.route('/api/check-osparc-job/', defaults={'job_id': ""}, methods=['GET'])
     @app.route('/api/check-osparc-job/<string:job_id>', methods=['GET'])
     def check_job_status(job_id):
@@ -51,6 +50,25 @@ def set_routes(app):
         resp = make_response(json.dumps(payload), payload["status_code"])
         return resp
 
+    # e.g., http://localhost:5000/api/results-images/fake-job-id/Plots-3.x
+    @app.route('/api/results-images/<string:job_id>/<string:image_type>', methods=['GET'])
+    def result_images(job_id, image_type):
+        if job_id == "":
+            return "Job ID is required"
+
+        if image_type == "":
+            return "image type is required"
+
+        image_types = {
+            "Plots-3.x": "Plots-3.x.png"
+        }
+
+        file_name = image_types[image_type]
+        print("job id:", job_id)
+        print("image type:", image_type)
+
+        file_path = os.path.join('jobs-results', job_id, file_name)
+        return send_from_directory('static', file_path)
 
     #######################
 
