@@ -46,7 +46,7 @@ def start_osparc_job(data):
 
     with osparc.ApiClient(cfg) as api_client:
         solvers_api, solver, files_api = setup_api(api_client)
-        input_file1: File = files_api.upload_file(file=f"{assets_dir}/requirements-for-osparc.current.zip")
+        input_file1: File = files_api.upload_file(file=f"{assets_dir}/main.zip")
         #input_file2: File = files_api.upload_file(file=f"{assets_dir}/INPUT_FOLDER/input.xlsx")
         # TODO remove
         # testing teh zip
