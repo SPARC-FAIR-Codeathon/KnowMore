@@ -180,7 +180,7 @@ def get_summary_table_data(datasetId):
     
     return  data_table_summary
 
-def get_keywords(list_datasetId):
+def get_all_datasets_text(list_datasetId):
     #get text from each dataset
     
     # text for each dataset is obtained from the dataset description,
@@ -195,6 +195,10 @@ def get_keywords(list_datasetId):
         data_text[datasetId]['protocol'] = get_protocolsio_text(datasetId) 
         #text from any txt file in the dataset except license files
         data_text[datasetId]['text files'] = get_dataset_text_files(datasetId)
+    return data_text
+
+def get_keywords(data_text):
+    
      
     # clean up text (remove stopwords etc.)
     
@@ -219,32 +223,26 @@ def get_keywords(list_datasetId):
     
     return keywords_json
 
-def get_abstract(list_datasetId):
-    # text for each dataset is obtained from the dataset description,
-    # protocol, and any text files in the datasets
-    data_text = {}
-    for datasetId in list_datasetId:
-        data_text[datasetId] = {}
-        # text from dataset description
-        data_text[datasetId]['description'] = get_dataset_description_text(datasetId)
-        #text from protocol all nice and cleaned, includes title, description
-        # and protocol steps
-        data_text[datasetId]['protocol'] = get_protocolsio_text(datasetId) 
-        #text from any txt file in the dataset except license files
-        data_text[datasetId]['text files'] = get_dataset_text_files(datasetId)
-     
+def get_abstract(data_text):
     # clean up text (remove stopwords etc.)
     
     # run text summarizer for all the datasets combined
     abstract = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
     return abstract
 
+def get_text_correlation(data_text):
+    # clean up text (remove stopwords etc.)
+    
+    # run text correlation calculator
+    
+    return 
+
+
 ## Test
 input_file = os.path.join(input_dir, 'input.json') 
 datasetIdsinput = json.load(open(input_file))
 list_datasetId = datasetIdsinput['datasetIds']
 list_datasetId = [str(x) for x in list_datasetId]
-print(list_datasetId)
 
 #storage dict to be saved as a json and returned to front-end
 dataset_data = {}
@@ -260,11 +258,16 @@ for datasetId in list_datasetId:
     dataset_data['summary table'][datasetId] = get_summary_table_data(datasetId)
 
 #keywords
-keywords = get_keywords(list_datasetId)
+data_text = get_all_datasets_text(list_datasetId)
+keywords = get_keywords(data_text)
 dataset_data['keywords'] = keywords
 
+#text correlation matrix
+#abstract = get_abstract(data_text)
+#dataset_data['abstract'] = abstract
+
 #abstract
-abstract = get_abstract(list_datasetId)
+abstract = get_abstract(data_text)
 dataset_data['abstract'] = abstract
 
 #save output
