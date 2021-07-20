@@ -26,6 +26,7 @@ osparc_extracted_tmp_path = "/tmp/osparc-extracted/"
 current_dir = pathlib.Path(__file__).parent.resolve()
 assets_dir = os.path.join(current_dir, "../..", "assets", "INPUT_FOLDER")
 input_assets_dir = os.path.join(current_dir, "../..", "assets", "INPUT_FOLDER")
+output_result_to_use = "output_1"
 output_json_filename = "output.json"
 
 
@@ -59,7 +60,7 @@ def start_osparc_job(dataset_info):
 
     # write our input to file
     with open(path_for_input_json, 'w') as input_file_json:
-        json.dump(dataset_info, input_file_json)
+        json.dump({"datasetIds": [60, 64, 65]}, input_file_json)
 
     with osparc.ApiClient(cfg) as api_client:
         solvers_api, solver, files_api = setup_api(api_client)
@@ -163,8 +164,10 @@ def check_job_status(job_id):
                 # 'filename': 'single_number.txt',
                 # 'id': '9fb4f70e-3589-3e9e-991e-3059086c3aae'}
                 # output_2 = 4.0
+
+                # we're only taking the first one
                 print(f"Now downloading to disk path:")
-                results_file: File = outputs.results[output_json_filename]
+                results_file: File = outputs.results[output_result_to_use]
                 print(f"file id: {results_file.id}")
                 download_path: str = files_api.download_file(file_id=results_file.id)
                 
@@ -179,14 +182,14 @@ def check_job_status(job_id):
                 # file to read
                 # right now assuming just that one file
                 # would just make a loop for doing multiple files
-                final_file_path = os.path.join(tmp_dir_path_for_job_outputs, "my_output_file.txt")
+                final_file_path = os.path.join(tmp_dir_path_for_job_outputs, output_json_filename)
                 plaintext_response = Path(final_file_path).read_text()
                 print(plaintext_response)
 
                 payload = {
                     "download_path": download_path,
                     "outputs": {
-                        "output1": plaintext_response,
+                        "output1": json.loads(plaintext_response),
                         # for other files, add more here probably
                     },
                     "finished": True,
@@ -225,10 +228,13 @@ def check_job_status(job_id):
         # exception returned by osparc
         print("OSPARC ERROR:")
         print(e)
+        print(e.body)
         payload = {
-            "osparc_error": true,
+            "osparc_error": True,
             "error": str(e.body),
             "status_code": 500,
+            "success": False,
+            "job_id": job_id,
             "finished": True,
         }
 
@@ -240,6 +246,8 @@ def check_job_status(job_id):
             "error": str(e.__class__),
             "status_code": 500,
             "finished": True,
+            "success": False,
+            "job_id": job_id,
         }
 
     print("payload: ", payload)
