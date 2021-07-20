@@ -8,6 +8,7 @@ from osparc.models import File, Job, JobInputs, JobOutputs, JobStatus, Solver
 import pathlib
 import zipfile
 from pathlib import Path
+from .sample_outputs import sample_output
 
 OSPARC_API_KEY = os.environ.get("OSPARC_API_KEY")
 OSPARC_API_SECRET = os.environ.get("OSPARC_API_SECRET")
@@ -104,7 +105,7 @@ def check_job_status(job_id):
 
         payload = {
             "download_path": "fake-path",
-            "outputs": ["fake-output1", "fake-output2"],
+            "outputs": sample_output,
             "finished": True,
             "progress_percent": 100,
             "success": True,
