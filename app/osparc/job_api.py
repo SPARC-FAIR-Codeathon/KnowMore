@@ -20,7 +20,7 @@ cfg = osparc.Configuration(
     password=OSPARC_API_SECRET,
 )
 
-# set some vars up front so we can adjust dynamically if we need to
+# set some vars up front so we can adjust later if we need to not break everything
 osparc_extracted_tmp_path = "/tmp/osparc-extracted/"
 
 current_dir = pathlib.Path(__file__).parent.resolve()
@@ -59,8 +59,7 @@ def start_osparc_job(dataset_info):
 
     # write our input to file
     with open(path_for_input_json, 'w') as input_file_json:
-        dataset_info_json = json.dumps(dataset_info)
-        input_file_json.write(json.dumps(dataset_info_json))
+        json.dump(dataset_info, input_file_json)
 
     with osparc.ApiClient(cfg) as api_client:
         solvers_api, solver, files_api = setup_api(api_client)
