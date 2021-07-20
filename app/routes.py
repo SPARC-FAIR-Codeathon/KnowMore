@@ -57,22 +57,24 @@ def set_routes(app):
         resp = make_response(json.dumps(payload), payload["status_code"])
         return resp
 
-    # e.g., http://localhost:5000/api/results-images/fake-job-id/Plots-3.x
-    @app.route('/api/results-images/<string:job_id>/<string:image_type>', methods=['GET'])
-    def result_images(job_id, image_type):
+    # e.g., http://localhost:5000/api/results-images/example-job-id/Plots-3.x.png
+    @app.route('/api/results-images/<string:job_id>/<string:image_name>', methods=['GET'])
+    def result_images(job_id, image_name):
         if job_id == "":
             return "Job ID is required"
 
-        if image_type == "":
-            return "image type is required"
+        if image_name == "":
+            return "image name is required"
 
-        image_types = {
-            "Plots-3.x": "Plots-3.x.png"
-        }
+        # for now just allow all
+        # image_types = {
+        #     "Plots-3.x": "Plots-3.x.png"
+        # }
 
-        file_name = image_types[image_type]
+        # file_name = image_types[image_type]
+        file_name = image_name
         print("job id:", job_id)
-        print("image type:", image_type)
+        print("image type:", image_name)
 
         file_path = os.path.join('jobs-results', job_id, file_name)
         return send_from_directory('static', file_path)
