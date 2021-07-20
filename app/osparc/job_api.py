@@ -50,7 +50,7 @@ def start_osparc_job(data):
         #input_file2: File = files_api.upload_file(file=f"{assets_dir}/INPUT_FOLDER/input.xlsx")
         # TODO remove
         # testing teh zip
-        input_file2: File = files_api.upload_file(file=f"{assets_dir}/INPUT_FOLDER/input.zip")
+        input_file2: File = files_api.upload_file(file=f"{assets_dir}/INPUT_FOLDER/input.json")
 
         try:
             job: Job = solvers_api.create_job(
