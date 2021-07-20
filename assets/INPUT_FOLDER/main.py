@@ -142,6 +142,11 @@ def get_knowledge_graph_data(datasetId):
     data_knowledge_graph['Specimen type']  = df['specimen type'].values[0]
     return data_knowledge_graph 
   
+def sorted_nicely( l ): 
+    """ Sort the given iterable in the way that humans expect.""" 
+    convert = lambda text: int(text) if text.isdigit() else text 
+    alphanum_key = lambda key: [ convert(c) for c in re.split('([0-9]+)', key) ] 
+    return sorted(l, key = alphanum_key)
     
 def get_summary_table_data(datasetId):
     #manifest.json: get dataset title, subtitle, publication date 
@@ -162,8 +167,13 @@ def get_summary_table_data(datasetId):
     data_table_summary['Number of subjects'] = len(df)
     data_table_summary['Species'] = df['species'].values[0]
     age_values = list(set(df['age'].values.tolist()))
+    if len(age_values)>1:
+        age_values = sorted_nicely(age_values)
+        age_range = age_values[0] + " - " + age_values[-1]
+        data_table_summary['Age'] = age_range
+    else:
+        data_table_summary['Age'] = str(age_values[0])
     
-    data_table_summary['Age'] = age_values
     sex_values = list(set(df['sex'].values.tolist()))
     data_table_summary['Sex'] = sex_values
     
@@ -242,6 +252,7 @@ input_file = os.path.join(input_dir, 'input.json')
 datasetIdsinput = json.load(open(input_file))
 list_datasetId = datasetIdsinput['datasetIds']
 list_datasetId = [str(x) for x in list_datasetId]
+#list_datasetId = ['60']
 
 #storage dict to be saved as a json and returned to front-end
 dataset_data = {}
