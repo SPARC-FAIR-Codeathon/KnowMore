@@ -4,6 +4,7 @@ import pandas as pd
 import io
 import re
 import os
+from PIL import Image
 
 ## define parameters depending on if you are running the code 
 ## on osparc or locally
@@ -207,8 +208,8 @@ def get_all_datasets_text(list_datasetId):
     return data_text
 
 def get_keywords(data_text):
+    #combine text for each dataset
     
-     
     # clean up text (remove stopwords etc.)
     
     # run keyword indentifier
@@ -217,6 +218,7 @@ def get_keywords(data_text):
     # we need a json format structure with keyword and their "weight"
     # I suggest we choose the weight as the minimum number of times a word is detected in a dataset text
     # so if the weight is 15, it means that the given word appears at least 15 times in each dataset
+    #keep to 20 words
     keywords_json = {}
     keywords_json['vagus'] = 15 
     keywords_json['nerve'] = 12
@@ -233,8 +235,8 @@ def get_keywords(data_text):
     return keywords_json
 
 def get_abstract(data_text):
-    # clean up text (remove stopwords etc.)
-    
+    #combine text from all datasets
+        
     # run text summarizer for all the datasets combined
     abstract = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
     return abstract
@@ -244,8 +246,23 @@ def get_text_correlation(data_text):
     
     # run text correlation calculator
     
+    #save json + PNG
     return 
 
+def get_image_files(datasetId):
+    datafile_image = {}
+    manifest_json = get_dataset_main_manifest(datasetId)
+    for file_info in manifest_json['files']:
+        if file_info['fileType'] == 'TIFF':
+            filepath = file_info['path'] 
+            print(filepath)
+            response = get_dataset_file_response(datasetId, filepath)
+            sio = io.BytesIO(response.content)  # Create an in-memory stream of the content
+            img = Image.open(sio)
+#            image_name = str(datasetId) + "-" + str(os.path.basename(filepath))
+            datafile_image[filepath] = img
+            
+    return datafile_image
 
 ## Test
 input_file = os.path.join(input_dir, 'input.json') 
@@ -253,7 +270,10 @@ datasetIdsinput = json.load(open(input_file))
 list_datasetId = datasetIdsinput['datasetIds']
 list_datasetId = [str(x) for x in list_datasetId]
 #list_datasetId = ['60']
-
+#for datasetId in list_datasetId:
+#    get_image_files(datasetId)
+#    
+#asfasf
 #storage dict to be saved as a json and returned to front-end
 dataset_data = {}
 
@@ -273,8 +293,7 @@ keywords = get_keywords(data_text)
 dataset_data['keywords'] = keywords
 
 #text correlation matrix
-#abstract = get_abstract(data_text)
-#dataset_data['abstract'] = abstract
+#correlation_matrix = get_correlation_matrix(data_text)
 
 #abstract
 abstract = get_abstract(data_text)
