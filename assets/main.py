@@ -240,8 +240,11 @@ def get_abstract(list_datasetId):
     return abstract
 
 ## Test
-list_datasetId = ['64', '65', '60']
-#list_datasetId = ['64']
+input_file = os.path.join(input_dir, 'input.json') 
+datasetIdsinput = json.load(open(input_file))
+list_datasetId = datasetIdsinput['datasetIds']
+list_datasetId = [str(x) for x in list_datasetId]
+print(list_datasetId)
 
 #storage dict to be saved as a json and returned to front-end
 dataset_data = {}
@@ -265,7 +268,8 @@ abstract = get_abstract(list_datasetId)
 dataset_data['abstract'] = abstract
 
 #save output
-with open('output.json', 'w+') as f:
+output_file = os.path.join(output_dir, 'output.json') 
+with open(output_file, 'w+') as f:
     # this would place the entire output on one line
     # use json.dump(lista_items, f, indent=4) to "pretty-print" with four spaces per indent
     json.dump(dataset_data, f) 
