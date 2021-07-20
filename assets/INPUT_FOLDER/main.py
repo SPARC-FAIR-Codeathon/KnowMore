@@ -151,18 +151,16 @@ def get_knowledge_graph_data(datasetId):
         df = pd.io.excel.read_excel(fh, engine='openpyxl')
     df.dropna(axis=0, how='all', inplace=True)
     #specimen_type = list(set(df['specimen type'].values.tolist()))
-    data_knowledge_graph['Specimen type'] = df['specimen type'].values[0]
-    return data_knowledge_graph
 
-
-def sorted_nicely(l):
-    """ Sort the given iterable in the way that humans expect."""
-    def convert(text): return int(text) if text.isdigit() else text
-    def alphanum_key(key): return [convert(c)
-                                   for c in re.split('([0-9]+)', key)]
-    return sorted(l, key=alphanum_key)
-
-
+    data_knowledge_graph['Specimen type']  = df['specimen type'].values[0]
+    return data_knowledge_graph 
+  
+def sorted_nicely(l): 
+    """ Sort the given iterable in the way that humans expect.""" 
+    convert = lambda text: int(text) if text.isdigit() else text 
+    alphanum_key = lambda key: [ convert(c) for c in re.split('([0-9]+)', key) ] 
+    return sorted(l, key = alphanum_key)
+   
 def get_summary_table_data(datasetId):
     # manifest.json: get dataset title, subtitle, publication date
     # subjects.xlsx: species, n subjects, age range, sex
@@ -300,15 +298,19 @@ def get_image_files(datasetId):
     manifest_json = get_dataset_main_manifest(datasetId)
     for file_info in manifest_json['files']:
         if file_info['fileType'] == 'TIFF':
-            filepath = file_info['path']
-            print(filepath)
-            response = get_dataset_file_response(datasetId, filepath)
-            # Create an in-memory stream of the content
-            sio = io.BytesIO(response.content)
-            img = Image.open(sio)
-#            image_name = str(datasetId) + "-" + str(os.path.basename(filepath))
-            datafile_image[filepath] = img
-
+            try:
+                filepath = file_info['path'] 
+                print(filepath)
+                response = get_dataset_file_response(datasetId, filepath)
+                sio = io.BytesIO(response.content)  # Create an in-memory stream of the content
+                img = Image.open(sio)
+                image_name = str(datasetId) + "-" + str(os.path.basename(filepath))
+                print(image_name, img)
+                #img.save(image_name)
+                datafile_image[filepath] = img
+            except:
+                print("NOT SAVED")
+                pass
     return datafile_image
 
 
@@ -323,6 +325,7 @@ list_datasetId = [str(x) for x in list_datasetId]
 #
 # asfasf
 # storage dict to be saved as a json and returned to front-end
+
 dataset_data = {}
 
 # knowledge graph data
