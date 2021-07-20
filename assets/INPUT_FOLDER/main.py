@@ -143,7 +143,7 @@ def get_knowledge_graph_data(datasetId):
     data_knowledge_graph['Specimen type']  = df['specimen type'].values[0]
     return data_knowledge_graph 
   
-def sorted_nicely( l ): 
+def sorted_nicely(l): 
     """ Sort the given iterable in the way that humans expect.""" 
     convert = lambda text: int(text) if text.isdigit() else text 
     alphanum_key = lambda key: [ convert(c) for c in re.split('([0-9]+)', key) ] 
@@ -254,13 +254,20 @@ def get_image_files(datasetId):
     manifest_json = get_dataset_main_manifest(datasetId)
     for file_info in manifest_json['files']:
         if file_info['fileType'] == 'TIFF':
-            filepath = file_info['path'] 
-            print(filepath)
-            response = get_dataset_file_response(datasetId, filepath)
-            sio = io.BytesIO(response.content)  # Create an in-memory stream of the content
-            img = Image.open(sio)
-#            image_name = str(datasetId) + "-" + str(os.path.basename(filepath))
-            datafile_image[filepath] = img
+            try:
+                filepath = file_info['path'] 
+                print(filepath)
+                response = get_dataset_file_response(datasetId, filepath)
+                sio = io.BytesIO(response.content)  # Create an in-memory stream of the content
+                img = Image.open(sio)
+                image_name = str(datasetId) + "-" + str(os.path.basename(filepath))
+                print(image_name, img)
+                #img.save(image_name)
+                datafile_image[filepath] = img
+            except:
+                print("NOT SAVED")
+                pass
+            
             
     return datafile_image
 
@@ -269,11 +276,12 @@ input_file = os.path.join(input_dir, 'input.json')
 datasetIdsinput = json.load(open(input_file))
 list_datasetId = datasetIdsinput['datasetIds']
 list_datasetId = [str(x) for x in list_datasetId]
-#list_datasetId = ['60']
+list_datasetId = ['64']
+
 #for datasetId in list_datasetId:
-#    get_image_files(datasetId)
-#    
-#asfasf
+#    datafile_image = get_image_files(datasetId)
+#print(datafile_image)   
+
 #storage dict to be saved as a json and returned to front-end
 dataset_data = {}
 
