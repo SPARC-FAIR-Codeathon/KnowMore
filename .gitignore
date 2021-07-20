@@ -129,3 +129,5 @@ dmypy.json
 .pyre/
 
 run-manual-job.sh
+static/**
+!static/.placeholder

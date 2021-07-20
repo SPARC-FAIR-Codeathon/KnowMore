@@ -4,7 +4,7 @@ from flask_cors import CORS
 from app.settings import config
 from app.routes import set_routes
 
-app=Flask(__name__)
+app=Flask(__name__, static_url_path='/static')
 app.config['CORS_HEADERS'] = 'Content-Type'
 CORS(app)
 config(app)
