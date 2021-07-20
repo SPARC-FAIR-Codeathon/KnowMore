@@ -1,7 +1,6 @@
 import requests
 import json
 import pandas as pd
-from scipy.io import loadmat
 import io
 import re
 import os
@@ -16,8 +15,8 @@ if "INPUT_FOLDER" in os.environ:
 else:
     #local input/output folders
     current_folder = os.getcwd()
-    input_dir = os.path.join(current_folder, "INPUT_FOLDER")
-    output_dir = os.path.join(current_folder, "OUTPUT_FOLDER")
+    input_dir = os.path.join(current_folder, 'tmp', 'fake-uuid-for-sample-data', 'INPUT_FOLDER')
+    output_dir = os.path.join(current_folder, 'tmp', 'fake-uuid-for-sample-data', 'OUTPUT_FOLDER')
     
 ## helper functions    
 def get_dataset_latest_version(datasetId):
