@@ -20,12 +20,15 @@ cfg = osparc.Configuration(
     password=OSPARC_API_SECRET,
 )
 
+# set some vars up front so we can adjust dynamically if we need to
 osparc_extracted_tmp_path = "/tmp/osparc-extracted/"
 
 current_dir = pathlib.Path(__file__).parent.resolve()
 assets_dir = os.path.join(current_dir, "../..", "assets", "INPUT_FOLDER")
 input_assets_dir = os.path.join(current_dir, "../..", "assets", "INPUT_FOLDER")
 output_json_filename = "output.json"
+
+
 
 def start_osparc_job(dataset_info):
     """
@@ -162,7 +165,7 @@ def check_job_status(job_id):
                 # 'id': '9fb4f70e-3589-3e9e-991e-3059086c3aae'}
                 # output_2 = 4.0
                 print(f"Now downloading to disk path:")
-                results_file: File = outputs.results["output_1"]
+                results_file: File = outputs.results[output_json_filename]
                 print(f"file id: {results_file.id}")
                 download_path: str = files_api.download_file(file_id=results_file.id)
                 
