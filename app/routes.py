@@ -30,16 +30,17 @@ def set_routes(app):
     #@cross_origin(origin=CLIENT_URL)
     @app.route('/api/start-osparc-job/', methods=['POST'])
     def create_job():
-        print("data as received:", request.data)
+        print("data as received:", request.json)
         # validate data
 
-        if request.data.get("datasetIds", False) == False:
+        dataset_dict = request.json
+        if dataset_dict.get("datasetIds", False) == False:
             error_message = make_response("Invalid data: need a json with key 'datasetIds' and value an array of integers", 400)
             return error_message
 
         print("json:", request.json)
 
-        payload = job_api.start_osparc_job(request.data)
+        payload = job_api.start_osparc_job(dataset_dict)
 
         resp = make_response(json.dumps(payload), payload["status_code"])
         return resp

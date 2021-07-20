@@ -23,9 +23,11 @@ cfg = osparc.Configuration(
 osparc_extracted_tmp_path = "/tmp/osparc-extracted/"
 
 current_dir = pathlib.Path(__file__).parent.resolve()
-assets_dir = os.path.join(current_dir, "../..", "assets")
+assets_dir = os.path.join(current_dir, "../..", "assets", "INPUT_FOLDER")
+input_assets_dir = os.path.join(current_dir, "../..", "assets", "INPUT_FOLDER")
+output_json_filename = "output.json"
 
-def start_osparc_job(dataset_info_json):
+def start_osparc_job(dataset_info):
     """
     creates job in osparc server
 
@@ -48,20 +50,21 @@ def start_osparc_job(dataset_info_json):
     # create dir for this request
     # we don't know job id yet, so just make a uuid for this request
     asset_dirname_for_job = str(uuid.uuid4())
-    asset_dir_for_job = os.path.join(assets_dir, asset_dirname_for_job)
+    asset_dir_for_job = os.path.join(input_assets_dir, "tmp", asset_dirname_for_job)
     path_for_input_json = os.path.join(asset_dir_for_job, "input.json")
+    os.mkdir(asset_dir_for_job)
 
     # write our input to file
-    with open(path_for_input_json, 'a') as input_file_json:
+    with open(path_for_input_json, 'w') as input_file_json:
+        dataset_info_json = json.dumps(dataset_info)
         input_file_json.write(json.dumps(dataset_info_json))
 
     with osparc.ApiClient(cfg) as api_client:
         solvers_api, solver, files_api = setup_api(api_client)
-        input_file1: File = files_api.upload_file(file=f"{asset_dir}/main.zip")
-        #input_file2: File = files_api.upload_file(file=f"{assets_dir}/INPUT_FOLDER/input.xlsx")
+        input_file1: File = files_api.upload_file(file=f"{input_assets_dir}/main.zip")
         # TODO remove
         # testing teh zip
-        input_file2: File = files_api.upload_file(file=f"{asset_dir_for_job}/INPUT_FOLDER/input.json")
+        input_file2: File = files_api.upload_file(file=f"{asset_dir_for_job}/input.json")
 
         try:
             job: Job = solvers_api.create_job(
@@ -93,6 +96,7 @@ def start_osparc_job(dataset_info_json):
                 "status_code": 500,
             }
 
+        # TODO can now remove the tmp assets dir for job we made
         return payload
 
 
