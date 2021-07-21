@@ -274,7 +274,7 @@ def get_keywords(data_text):
     all_keyword_df = all_keyword_df.sort_values(
         "min_in_sample", ascending=False).head(top_words)
     # print(all_keyword_df.to_json())
-    return all_keyword_df.to_json()
+    return all_keyword_df['min_in_sample'].to_dict()  # .to_json()
 
     # keywords_json['vagus'] = 15
     # keywords_json['nerve'] = 12
@@ -341,12 +341,12 @@ def get_text_correlation(data_text):
     all_keyword_df = all_keyword_df.T
     all_keyword_df[all_keyword_df != 0] = 1
     df_len = len(all_keyword_df)
-    cor_matrix = {"from": [], "to": [], "value": []}
+    cor_matrix = {"from dataset ID": [], "to dataset ID": [], "value": []}
     for c1 in all_keyword_df.columns:
         for c2 in all_keyword_df.columns:
             if c1 == c2:
-                cor_matrix["from"].append(c1)
-                cor_matrix["to"].append(c1)
+                cor_matrix["from dataset ID"].append(c1)
+                cor_matrix["to dataset ID"].append(c1)
                 cor_matrix["value"].append(1)
             if c1 < c2:
                 # tdata = all_keyword_df[~(
@@ -355,15 +355,16 @@ def get_text_correlation(data_text):
 
                 value = len(
                     all_keyword_df[all_keyword_df[c1] == all_keyword_df[c2]])*1./df_len
-                cor_matrix["from"].append(c1)
-                cor_matrix["to"].append(c2)
-                cor_matrix["from"].append(c2)
-                cor_matrix["to"].append(c1)
+                cor_matrix["from dataset ID"].append(c1)
+                cor_matrix["to dataset ID"].append(c2)
+                cor_matrix["from dataset ID"].append(c2)
+                cor_matrix["to dataset ID"].append(c1)
                 cor_matrix["value"].append(value)
                 cor_matrix["value"].append(value)
     cor_matrix = pd.DataFrame(cor_matrix)
-    cor_matrix = cor_matrix.pivot(index="from", columns="to", values="value")
-    sns.heatmap(cor_matrix)
+    cor_matrix = cor_matrix.pivot(
+        index="from dataset ID", columns="to dataset ID", values="value")
+    sns.heatmap(cor_matrix, cmap='coolwarm')
     savefig(os.path.join(output_dir, "Correlation_heatmap.png"))
 
     return cor_matrix.to_json()
