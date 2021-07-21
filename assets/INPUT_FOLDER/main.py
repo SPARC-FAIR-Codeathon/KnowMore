@@ -1,13 +1,17 @@
-import requests
-import json
-import pandas as pd
-import numpy as np
-import io
-import re
-import os
-from PIL import Image
-
 import anmol
+from PIL import Image
+import os
+import re
+import io
+import seaborn as sns
+from pylab import *
+import numpy as np
+import pandas as pd
+import json
+import requests
+import matplotlib
+matplotlib.use('Agg')
+
 
 # define parameters depending on if you are running the code
 # on osparc or locally
@@ -304,12 +308,61 @@ def get_abstract(data_text):
 
 
 def get_text_correlation(data_text):
+
     # clean up text (remove stopwords etc.)
 
     # run text correlation calculator
 
     # save json + PNG
-    return
+    index = []
+    all_keyword_df = []
+    for datasetId in data_text:
+        index.append(datasetId)
+        text = " ".join(list(anmol.NestedDictValues(data_text[datasetId])))
+
+        # data_text[datasetId]["description"] + \
+        # " ".join(data_text[datasetId]["protocol"].values())
+        text = text.replace("*", "").replace("\n", " ")
+        words = [str(word) for word in anmol.keywords(text)]
+        # Cleaning
+        keywords_json = {}
+        # print(words)
+
+        for word in set(words):
+            if word not in keywords_json:
+                keywords_json[word] = [0]
+            for word2 in words:
+                if word in word2:
+                    keywords_json[word][0] += 1  # [text.count(word)]
+
+        all_keyword_df.append(pd.DataFrame(keywords_json))
+    all_keyword_df = pd.concat(all_keyword_df).fillna(0)
+    all_keyword_df.index = index
+    all_keyword_df = all_keyword_df.T
+    all_keyword_df[all_keyword_df != 0] = 1
+    df_len = len(all_keyword_df)
+    cor_matrix = {"from": [], "to": [], "value": []}
+    for c1 in all_keyword_df.columns:
+        for c2 in all_keyword_df.columns:
+            if c1 == c2:
+                cor_matrix["from"].append(c1)
+                cor_matrix["to"].append(c1)
+                cor_matrix["value"].append(1)
+            if c1 < c2:
+                value = len(
+                    all_keyword_df[all_keyword_df[c1] == all_keyword_df[c2]])*1./df_len
+                cor_matrix["from"].append(c1)
+                cor_matrix["to"].append(c2)
+                cor_matrix["from"].append(c2)
+                cor_matrix["to"].append(c1)
+                cor_matrix["value"].append(value)
+                cor_matrix["value"].append(value)
+    cor_matrix = pd.DataFrame(cor_matrix)
+    cor_matrix = cor_matrix.pivot(index="from", columns="to", values="value")
+    sns.heatmap(cor_matrix)
+    savefig(os.path.join(output_dir, "Correlation_heatmap.png"))
+
+    return cor_matrix.to_json()
 
 
 def get_image_files(datasetId):
@@ -372,6 +425,7 @@ dataset_data['keywords'] = keywords
 # abstract
 abstract = get_abstract(data_text)
 dataset_data['abstract'] = abstract
+dataset_data['correlation_matrix'] = get_text_correlation(data_text)
 
 # save output
 output_file = os.path.join(output_dir, 'output.json')
