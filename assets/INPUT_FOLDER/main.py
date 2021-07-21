@@ -10,6 +10,9 @@ import pandas as pd
 import json
 import requests
 import matplotlib
+import shutil
+from scipy.io import loadmat, savemat
+
 matplotlib.use('Agg')
 
 
@@ -27,10 +30,10 @@ else:
                              'fake-uuid-for-sample-data', 'INPUT_FOLDER')
     output_dir = os.path.join(current_folder, 'tmp',
                               'fake-uuid-for-sample-data', 'OUTPUT_FOLDER')
+matlab_input_folder_name = 'matlab-input-folder'
+matlab_input_save_folder = os.path.join(output_dir, matlab_input_folder_name)
 
-# helper functions
-
-
+# functions to get dataset from various sparc ressources
 def get_dataset_latest_version(datasetId):
     url = "https://api.pennsieve.io/discover/datasets/" + datasetId
     headers = {"Accept": "application/json"}
@@ -55,6 +58,21 @@ def get_dataset_file_response(datasetId, filepath):
     response = requests.request("POST", url, json=payload, headers=headers)
     return response
 
+
+def get_dataset_file_download(datasetId, filepath):
+    versionId = get_dataset_latest_version(datasetId)
+
+    url = "https://api.pennsieve.io/zipit/discover"
+
+    payload = {"data": {
+        "paths": [filepath],
+        "datasetId": datasetId,
+        "version": versionId
+    }}
+    headers = {"Content-Type": "application/json"}
+
+    response = requests.request("POST", url, json=payload, headers=headers)
+    return response
 
 def get_dataset_description_text(datasetId):
     filepath = "readme.md"
@@ -139,6 +157,43 @@ def get_dataset_text_files(datasetId):
     return datafile_text
 
 
+def get_dataset_mat_files(datasetId):
+    datafile_mat = {}
+    manifest_json = get_dataset_main_manifest(datasetId)
+    for file_info in manifest_json['files']:
+        if file_info['fileType'] == 'MAT':
+            filepath = file_info['path']
+            if 'derivative' in filepath:
+                print(filepath)
+                response = get_dataset_file_response(datasetId, filepath)
+                datafile_mat[filepath] = response
+    return datafile_mat
+
+
+def get_image_files(datasetId):
+    datafile_image = {}
+    manifest_json = get_dataset_main_manifest(datasetId)
+    for file_info in manifest_json['files']:
+        if file_info['fileType'] == 'TIFF':
+            try:
+                filepath = file_info['path']
+                print(filepath)
+                response = get_dataset_file_response(datasetId, filepath)
+                # Create an in-memory stream of the content
+                sio = io.BytesIO(response.content)
+                img = Image.open(sio)
+                image_name = str(datasetId) + "-" + \
+                    str(os.path.basename(filepath))
+                print(image_name, img)
+                # img.save(image_name)
+                datafile_image[filepath] = img
+            except:
+                print("NOT SAVED")
+                pass
+    return datafile_image
+
+
+# data processing
 def get_knowledge_graph_data(datasetId):
     # get species information from subjects file
     # get specimen type and specimen anatomical location from samples.xlsx
@@ -369,30 +424,47 @@ def get_text_correlation(data_text):
 
     return cor_matrix.to_json()
 
-
-def get_image_files(datasetId):
-    datafile_image = {}
-    manifest_json = get_dataset_main_manifest(datasetId)
-    for file_info in manifest_json['files']:
-        if file_info['fileType'] == 'TIFF':
-            try:
-                filepath = file_info['path']
-                print(filepath)
-                response = get_dataset_file_response(datasetId, filepath)
-                # Create an in-memory stream of the content
-                sio = io.BytesIO(response.content)
-                img = Image.open(sio)
-                image_name = str(datasetId) + "-" + \
-                    str(os.path.basename(filepath))
-                print(image_name, img)
-                # img.save(image_name)
-                datafile_image[filepath] = img
-            except:
-                print("NOT SAVED")
-                pass
-    return datafile_image
-
-
+def get_all_datasets_mat_files(list_datasetId):
+    if os.path.isdir(matlab_input_save_folder):
+        #delete any existing output matlab folder
+        shutil.rmtree(matlab_input_save_folder)
+    os.makedirs(matlab_input_save_folder)  
+    
+    matlab_data_folder = os.path.join(matlab_input_save_folder, 'matlab_data')
+    os.makedirs(matlab_data_folder) 
+    df = pd.DataFrame()
+    full_datasetId_list = []
+    filepath_list = []
+    for datasetId in list_datasetId:
+        dataset_mat = get_dataset_mat_files(datasetId)
+        if dataset_mat:
+            datasetId_path = os.path.join(matlab_data_folder, str(datasetId))
+            os.makedirs(datasetId_path)
+            for filepath in dataset_mat.keys():
+                #matlab-input.xlsx data
+                full_datasetId_list.append(int(datasetId))
+                print('filepath', filepath)
+                ps_file_path = "/".join(filepath.strip("/").split('/')[1:])
+                filepath_list.append(ps_file_path)
+                
+                #saving mat file
+                mat_file_name = os.path.basename(ps_file_path)
+                mat_file_folder = os.path.join(datasetId_path, 'derivative')
+                if not os.path.isdir(mat_file_folder):
+                    os.makedirs(mat_file_folder) 
+                mat_file_path = os.path.join(mat_file_folder, mat_file_name)                
+                response = dataset_mat[filepath]
+#                with open(mat_file_path, 'wb') as f:
+#                    f.write(response.content)
+                with open(mat_file_path, 'w', encoding="utf-8") as f:
+                    f.write(response.text)
+    if len(full_datasetId_list)>0:
+        df["datasetId"] = full_datasetId_list
+        df["filepath"] = filepath_list
+        df.to_excel(os.path.join(matlab_input_save_folder, 'matlab_input.xlsx'), index=False)
+        shutil.make_archive(matlab_input_save_folder, 'zip', output_dir, matlab_input_folder_name)
+    return        
+        
 # Test
 input_file = os.path.join(input_dir, 'input.json')
 datasetIdsinput = json.load(open(input_file))
@@ -420,17 +492,21 @@ for datasetId in list_datasetId:
         datasetId)
 
 # keywords
-data_text = get_all_datasets_text(list_datasetId)
-keywords = get_keywords(data_text)
-dataset_data['keywords'] = keywords
+#data_text = get_all_datasets_text(list_datasetId)
+#keywords = get_keywords(data_text)
+#dataset_data['keywords'] = keywords
 
 # text correlation matrix
 #correlation_matrix = get_correlation_matrix(data_text)
 
 # abstract
-abstract = get_abstract(data_text)
-dataset_data['abstract'] = abstract
-dataset_data['correlation_matrix'] = get_text_correlation(data_text)
+#abstract = get_abstract(data_text)
+#dataset_data['abstract'] = abstract
+#dataset_data['correlation_matrix'] = get_text_correlation(data_text)
+
+
+#matlab_input files generator
+get_all_datasets_mat_files(list_datasetId)
 
 # save output
 output_file = os.path.join(output_dir, 'output.json')
