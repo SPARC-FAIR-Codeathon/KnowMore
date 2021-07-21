@@ -58,7 +58,7 @@ def start_python_osparc_job(dataset_info):
         "input_2": path_for_input_json,
     }
 
-    payload = start_osparc_job(input_file_paths)
+    payload = start_osparc_job("python", input_file_paths)
 
     return payload
 
@@ -71,11 +71,11 @@ def start_matlab_osparc_job(matlab_zip_filepath):
         "input_1": matlab_zip_filepath,
     }
 
-    payload = start_osparc_job(input_file_paths)
+    payload = start_osparc_job("matlab", input_file_paths)
 
     return payload
 
-def start_osparc_job(input_file_paths):
+def start_osparc_job(job_type, input_file_paths):
     """
     uploads files according to paths passed in
     Then creates job in osparc server
@@ -86,7 +86,6 @@ def start_osparc_job(input_file_paths):
 
     print(osparc.__version__)
     print(cfg.host)
-    print(input_file_paths)
 
     if OSPARC_TEST_MODE:
         # return false job ID
@@ -98,7 +97,7 @@ def start_osparc_job(input_file_paths):
         return payload
 
     with osparc.ApiClient(cfg) as api_client:
-        solvers_api, solver, files_api = setup_api(api_client)
+        solvers_api, solver, files_api = setup_api(job_type, api_client)
 
         # clone the dict for a new dict to send to osparc
         job_inputs = dict(input_file_paths)
@@ -146,7 +145,7 @@ def check_python_job_status(job_id):
     - zip received from python osparc job also has a matlab.zip that is sent back to osparc to start a matlab osparc job.
     """
 
-    payload = check_job_status(job_id)
+    payload = check_job_status("python", job_id)
     
     if payload.get("success", False):
         # get outputs. Unzip to a different tmp path for now, then just get the plaintext response to send to frontend
@@ -185,7 +184,7 @@ def check_matlab_job_status(job_id):
     Check status of the matlab job in osparc
     - if finished, unzips results and puts in static folder for frontend to view
     """
-    payload = check_job_status(job_id)
+    payload = check_job_status("matlab", job_id)
 
     if payload.get("success", False):
         # get outputs. Unzip to static dir so frontend can read the image path
@@ -196,7 +195,7 @@ def check_matlab_job_status(job_id):
     return payload
 
 
-def check_job_status(job_id):
+def check_job_status(job_type, job_id):
     """
     check if job is done. If done, send results
     - expects teh full job dict from the frontend currently (frontend sends as json)
@@ -229,7 +228,7 @@ def check_job_status(job_id):
     # Ok, now for real mode:
     try:
         with osparc.ApiClient(cfg) as api_client:
-            solvers_api, solver, files_api = setup_api(api_client)
+            solvers_api, solver, files_api = setup_api(job_type, api_client)
             status = solvers_api.inspect_job(solver.id, solver.version, job_id)
             print("solver info:", solver.id, solver.version)
 
@@ -337,14 +336,28 @@ def check_job_status(job_id):
 
 ####################
 # helpers
-def setup_api(api_client):
+def setup_api(job_type, api_client):
     """
     helper code to get solver metadata
     """
+
+    solver_types = {
+        "python": {
+            "runner": "simcore/services/comp/osparc-python-runner",
+            "version": "1.2.0"
+        },
+        "matlab": {
+            "runner": "simcore/services/comp/mat-parser",
+            "version": "1.1.0",
+        }
+    }
+
     solvers_api = SolversApi(api_client)
     solver: Solver = solvers_api.get_solver_release(
-        "simcore/services/comp/osparc-python-runner", "1.2.0"
+        solver_types[job_type]["runner"],
+        solver_types[job_type]["version"],
     )
+
     files_api = FilesApi(api_client)
     print(solver.id, solver.version)
 
