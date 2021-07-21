@@ -16,19 +16,19 @@ git clone https://github.com/SPARC-FAIR-Codeathon/KnowMore.git --recurse
 
 Open Anaconda prompt (Windows) or the system Command line interface then naviguate to the KnowMore folder
 ```sh
-cd ./KnowMore
+$ cd ./KnowMore
 ```
 
 ### Setup conda env
 ```sh
-conda create -n "knowmore-flask-env" python=3.6
-conda activate knowmore-flask-env
+$ conda create -n "knowmore-flask-env" python=3.6
+$ conda activate knowmore-flask-env
 ```
 
 ### Install Python dependencies
 ```sh
-conda install pip
-pip install -r requirements.txt
+$ conda install pip
+$ pip install -r requirements.txt
 ```
 
 ### Setup env vars
@@ -90,18 +90,18 @@ The environment variables required are listed in the table below along with info
 
 Each of them can be set in your conda environment as follows
 ```sh
-conda env config vars set MY_VAR=something MY_OTHER_VAR=something_else
+$ conda env config vars set MY_VAR=value1 MY_OTHER_VAR=value2
 ```
 
 ### start flask server
 ```sh
-flask run 
+$ flask run 
 ```
 
 or if you require remote access: (NOTE untested)
 
 ```sh
-flask run --host=0.0.0.0
+$ flask run --host=0.0.0.0
 ```
 
 ### View your flask app

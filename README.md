@@ -189,7 +189,7 @@ Run our back-end flask-server following the documentation [available here](https
 
 Run our fork the sparc-app by following the documentation [available here](https://github.com/RyanQuey/sparc-app/tree/84ab5df2203ef0a551051cf0ac037762dbc4e7dc).
 
-Our back-end data processing programs consists of a Matlab code for handling 'MAT' files (when found in a dataset) and a Python code (for processing all other datatypes). They run on osparc and, as such do not require, any local setup. The documentation for using/editing them is, however, [available here](https://github.com/SPARC-FAIR-Codeathon/KnowMore/blob/main/README.flask.md) if needed.
+Our back-end data processing programs consists of a Matlab code for handling 'MAT' files (when found in a dataset) and a Python code (for processing all other datatypes). They run on osparc and, as such do not require, any local setup. The documentation for using/editing them is, however, [available here]() if needed.
 
 ## Progress during the Codeathon and future work
 Details about our progress during thus Hackathon and future items we intended to complete afterwards are provided [here](). Some of these items are also discussed in the [draft of our manuscript]() associated with this project.
