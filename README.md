@@ -109,7 +109,7 @@ Follow the steps described below:
 ## Using the Source Code
 The front end of our app is based on a fork of the sparc-app. The documentation for using/editing it is [available here](https://github.com/RyanQuey/sparc-app/tree/84ab5df2203ef0a551051cf0ac037762dbc4e7dc).
 
-Our back-end is consist of a flask-server that communicates with osaprc. The documentation for using/editing it is [available here](https://github.com/SPARC-FAIR-Codeathon/KnowMore/blob/main/README.flask.md).
+Our back-end consists of a flask-server that communicates with osparc. The documentation for using/editing it is [available here](https://github.com/SPARC-FAIR-Codeathon/KnowMore/blob/main/README.flask.md).
 
 ## License
 KnowMore is distributed under the MIT License. See [LICENSE](https://github.com/SPARC-FAIR-Codeathon/KnowMore/blob/main/LICENSE) for more information.
