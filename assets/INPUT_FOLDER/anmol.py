@@ -124,7 +124,7 @@ def summariser(merged_text, top_n=5):
     for i in range(top_n):
         summarize_text.append(ranked_sentence[i][1])
 
-    return ". ".join(summarize_text)
+    return " ".join(summarize_text)
 
 
 def summariser2(merged_text):
