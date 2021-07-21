@@ -270,7 +270,7 @@ def get_keywords(data_text):
     all_keyword_df.index = index
     all_keyword_df = all_keyword_df.T
     all_keyword_df["min_in_sample"] = all_keyword_df.apply(
-        lambda x: np.min(x), axis=1)
+        lambda x: np.min(x.values), axis=1)
     all_keyword_df = all_keyword_df.sort_values(
         "min_in_sample", ascending=False).head(top_words)
     # print(all_keyword_df.to_json())
@@ -349,6 +349,10 @@ def get_text_correlation(data_text):
                 cor_matrix["to"].append(c1)
                 cor_matrix["value"].append(1)
             if c1 < c2:
+                # tdata = all_keyword_df[~(
+                # (all_keyword_df[c1] == 0) & (all_keyword_df[c2] == 0))]
+                # value = len(tdata[tdata[c1] == tdata[c2]])/len(tdata)
+
                 value = len(
                     all_keyword_df[all_keyword_df[c1] == all_keyword_df[c2]])*1./df_len
                 cor_matrix["from"].append(c1)
