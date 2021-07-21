@@ -57,11 +57,12 @@ To address this problem, we have developed a tool called KnowMore for the SPARC 
 <br/>
 
 The output of KnowMore consists of multiple interactive items displayed to the user: 
-1. Common keywords describing the datasets
-2. An automated summary paragraph of the combined datasets
-3. A knowledge graph
-4. Clustering of similar images (if images are included in the datasets)
-5. Correlation between measured quantities (if tabular data is included in the datasets). 
+1. A knowledge graph of high-level connections between the datasets (authors, funding source, etc.)
+2. A set of common keywords to the datasets
+3. An abstract of the combined datasets
+4. A summary table containing information of the studies conducted in each dataset (number of subjects, species, etc.)
+5. Joint plots of common measured quantities across dataset (if tabular data is included in the datasets). 
+6. Clustering by similaries of all the image data in the dataset
 
 A screenshot of a sample output is presented in the figure below. This output can provide a foundation to the user for rapidly identifying potential relations or previously unknown correlations between the data and proceed accordingly in their investigation.
 
@@ -106,6 +107,9 @@ Follow the steps described below:
 4. Wait until the interactive results are displayed
 
 ## Using the Source Code
+The front end of our app is based on a fork of the sparc-app. The documentation for using/editing it is [available here](https://github.com/RyanQuey/sparc-app/tree/84ab5df2203ef0a551051cf0ac037762dbc4e7dc).
+
+Our back-end is consist of a flask-server that communicates with osaprc. The documentation for using/editing it is [available here](https://github.com/SPARC-FAIR-Codeathon/KnowMore/blob/main/README.flask.md).
 
 ## License
 KnowMore is distributed under the MIT License. See [LICENSE](https://github.com/SPARC-FAIR-Codeathon/KnowMore/blob/main/LICENSE) for more information.
