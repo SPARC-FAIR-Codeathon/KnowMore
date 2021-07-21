@@ -1,6 +1,7 @@
 import requests
 import json
 import pandas as pd
+import numpy as np
 import io
 import re
 import os
@@ -152,15 +153,18 @@ def get_knowledge_graph_data(datasetId):
     df.dropna(axis=0, how='all', inplace=True)
     #specimen_type = list(set(df['specimen type'].values.tolist()))
 
-    data_knowledge_graph['Specimen type']  = df['specimen type'].values[0]
-    return data_knowledge_graph 
-  
-def sorted_nicely(l): 
-    """ Sort the given iterable in the way that humans expect.""" 
-    convert = lambda text: int(text) if text.isdigit() else text 
-    alphanum_key = lambda key: [ convert(c) for c in re.split('([0-9]+)', key) ] 
-    return sorted(l, key = alphanum_key)
-   
+    data_knowledge_graph['Specimen type'] = df['specimen type'].values[0]
+    return data_knowledge_graph
+
+
+def sorted_nicely(l):
+    """ Sort the given iterable in the way that humans expect."""
+    def convert(text): return int(text) if text.isdigit() else text
+    def alphanum_key(key): return [convert(c)
+                                   for c in re.split('([0-9]+)', key)]
+    return sorted(l, key=alphanum_key)
+
+
 def get_summary_table_data(datasetId):
     # manifest.json: get dataset title, subtitle, publication date
     # subjects.xlsx: species, n subjects, age range, sex
@@ -235,24 +239,37 @@ def get_keywords(data_text):
     # I suggest we choose the weight as the minimum number of times a word is detected in a dataset text
     # so if the weight is 15, it means that the given word appears at least 15 times in each dataset
     # keep to 20 words
+    top_words = 20
     index = []
     all_keyword_df = []
     for datasetId in data_text:
         index.append(datasetId)
-        text = data_text[datasetId]["description"] + \
-            " ".join(data_text[datasetId]["protocol"].values())
-        text = text.lower().replace("*", "").replace("\n", " ")
-        words = anmol.keywords(text)
+        text = " ".join(list(anmol.NestedDictValues(data_text[datasetId])))
+
+        # data_text[datasetId]["description"] + \
+        # " ".join(data_text[datasetId]["protocol"].values())
+        text = text.replace("*", "").replace("\n", " ")
+        words = [str(word) for word in anmol.keywords(text)]
         # Cleaning
         keywords_json = {}
-        for word in words:
+        # print(words)
+
+        for word in set(words):
             if word not in keywords_json:
                 keywords_json[word] = [0]
-            keywords_json[word][0] += 1
+            for word2 in words:
+                if word in word2:
+                    keywords_json[word][0] += 1  # [text.count(word)]
+
         all_keyword_df.append(pd.DataFrame(keywords_json))
     all_keyword_df = pd.concat(all_keyword_df).fillna(0)
     all_keyword_df.index = index
     all_keyword_df = all_keyword_df.T
+    all_keyword_df["min_in_sample"] = all_keyword_df.apply(
+        lambda x: np.min(x), axis=1)
+    all_keyword_df = all_keyword_df.sort_values(
+        "min_in_sample", ascending=False).head(top_words)
+    # print(all_keyword_df.to_json())
     return all_keyword_df.to_json()
 
     # keywords_json['vagus'] = 15
@@ -274,11 +291,13 @@ def get_abstract(data_text):
     # combine text from all datasets
 
     # run text summarizer for all the datasets combined
-    text_to_summarise = []
-    for datasetId in data_text:
-        text_to_summarise.append(data_text[datasetId]["description"])
-    text_to_summarise = " ".join(text_to_summarise)
-    abstract = anmol.summariser(text_to_summarise)
+    # text_to_summarise = []
+    # for datasetId in data_text:
+    # text_to_summarise.append(data_text[datasetId]["description"])
+    # text_to_summarise = " ".join(text_to_summarise)
+
+    text_to_summarise = " ".join(list(anmol.NestedDictValues(data_text)))
+    abstract = anmol.summariser(text_to_summarise, top_n=10)
 
     # abstract = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
     return abstract
@@ -299,14 +318,16 @@ def get_image_files(datasetId):
     for file_info in manifest_json['files']:
         if file_info['fileType'] == 'TIFF':
             try:
-                filepath = file_info['path'] 
+                filepath = file_info['path']
                 print(filepath)
                 response = get_dataset_file_response(datasetId, filepath)
-                sio = io.BytesIO(response.content)  # Create an in-memory stream of the content
+                # Create an in-memory stream of the content
+                sio = io.BytesIO(response.content)
                 img = Image.open(sio)
-                image_name = str(datasetId) + "-" + str(os.path.basename(filepath))
+                image_name = str(datasetId) + "-" + \
+                    str(os.path.basename(filepath))
                 print(image_name, img)
-                #img.save(image_name)
+                # img.save(image_name)
                 datafile_image[filepath] = img
             except:
                 print("NOT SAVED")
