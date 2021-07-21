@@ -24,32 +24,20 @@ cfg = osparc.Configuration(
 osparc_extracted_tmp_path = "/tmp/osparc-extracted/"
 
 current_dir = pathlib.Path(__file__).parent.resolve()
-assets_dir = os.path.join(current_dir, "../..", "assets", "INPUT_FOLDER")
-input_assets_dir = os.path.join(current_dir, "../..", "assets", "INPUT_FOLDER")
+
+static_dir = os.path.join(current_dir, "..", "..", "static")
+input_assets_dir = os.path.join(current_dir, "..", "..", "assets", "INPUT_FOLDER")
+# key of output received from osparc to use 
 output_result_to_use = "output_1"
-output_json_filename = "output.json"
 
 
 
-def start_osparc_job(dataset_info):
+
+
+def start_python_osparc_job(dataset_info):
     """
-    creates job in osparc server
-
-    @param data ....nothing yet. But it is what we receive from frontend
-    @return job info
+    @param dataset_info dict with single key: "datasetIds" which has value of an array of pennsieve ids (integers)
     """
-
-    print(osparc.__version__)
-    print(cfg.host)
-
-    if OSPARC_TEST_MODE:
-        # return false job ID
-        payload = {
-            "job_id": "fake-job-for-testing",
-            "status_code": 200,
-        }
-
-        return payload
 
     # create dir for this request
     # we don't know job id yet, so just make a uuid for this request
@@ -60,25 +48,72 @@ def start_osparc_job(dataset_info):
 
     # write our input to file
     with open(path_for_input_json, 'w') as input_file_json:
-        json.dump({"datasetIds": [60, 64, 65]}, input_file_json)
+        #json.dump({"datasetIds": [60, 64, 65]}, input_file_json)
+        json.dump(dataset_info, input_file_json)
+
+    main_input_zip_path = os.path.join(input_assets_dir, "main.zip")
+
+    input_file_paths = {
+        "input_1": main_input_zip_path,
+        "input_2": path_for_input_json,
+    }
+
+    payload = start_osparc_job(input_file_paths)
+
+    return payload
+
+
+def start_matlab_osparc_job(matlab_zip_filepath):
+    """
+    @param matlab_zip_filepath path to the matlab-input-folder.zip
+    """
+    input_file_paths = {
+        "input_1": matlab_zip_filepath,
+    }
+
+    payload = start_osparc_job(input_file_paths)
+
+    return payload
+
+def start_osparc_job(input_file_paths):
+    """
+    uploads files according to paths passed in
+    Then creates job in osparc server
+
+    @param input_file_paths dict paths to files to upload. Keys will be used for keys to send to osparc
+    @return job info
+    """
+
+    print(osparc.__version__)
+    print(cfg.host)
+    print(input_file_paths)
+
+    if OSPARC_TEST_MODE:
+        # return false job ID
+        payload = {
+            "job_id": "fake-job-for-testing",
+            "status_code": 200,
+        }
+
+        return payload
 
     with osparc.ApiClient(cfg) as api_client:
         solvers_api, solver, files_api = setup_api(api_client)
-        input_file1: File = files_api.upload_file(file=f"{input_assets_dir}/main.zip")
-        # TODO remove
-        # testing teh zip
-        input_file2: File = files_api.upload_file(file=f"{asset_dir_for_job}/input.json")
+
+        # clone the dict for a new dict to send to osparc
+        job_inputs = dict(input_file_paths)
+
+        for key, input_file_path in input_file_paths.items():
+            print("upload input found at:", input_file_path)
+            input_file: File = files_api.upload_file(file=input_file_path)
+            # set to respective key for the dict to send to osparc
+            job_inputs[key] = input_file
 
         try:
             job: Job = solvers_api.create_job(
                 solver.id,
                 solver.version,
-                JobInputs(
-                {
-                    "input_2": input_file2,
-                    "input_1": input_file1,
-                }
-                ),
+                JobInputs(job_inputs),
             )
 
             print("job we got", job)
@@ -101,6 +136,62 @@ def start_osparc_job(dataset_info):
 
         # TODO can now remove the tmp assets dir for job we made
         return payload
+
+
+def check_python_job_status(job_id):
+    """
+    Check status of the python job in osparc
+    - if finished, unzips results and sends json to frontend. 
+    - zip received from python osparc job also has a matlab.zip that is sent back to osparc to start a matlab osparc job.
+    """
+
+    payload = check_job_status(job_id)
+    
+    if payload.get("success", False):
+        # get outputs. Unzip to a different tmp path for now, then just get the plaintext response to send to frontend
+        dir_path_for_job_outputs = unzip_osparc_outputs(payload["download_path"], osparc_extracted_tmp_path)
+
+        # file in the output that has the json that we expect from python osparc job
+        # right now assuming just that one file
+        # would just make a loop for doing multiple files
+        final_file_path = os.path.join(dir_path_for_job_outputs, "output.json")
+
+        plaintext_response = Path(final_file_path).read_text()
+        print(plaintext_response)
+
+        # add outputs to payload before returning to the front and
+        payload["outputs"] = {
+            "output1": json.loads(plaintext_response),
+        }
+
+        # also start matlab job. create job to get the job ID so frontend knows what job to poll for, but start job asyncronously for now
+        matlab_zip_filepath = os.path.join(dir_path_for_job_outputs, "matlab-input-folder.zip")
+
+        try:
+            matlab_job_payload = start_matlab_osparc_job(matlab_zip_filepath)
+            payload["matlab_job_id"] = matlab_job_payload["job_id"]
+        except Exception as e:
+            # don't want the whole thing to fail if the matlab part doesn't run
+            print("failed to create matlab job, just continue on without that")
+            print(e)
+
+
+
+    return payload
+
+def check_matlab_job_status(job_id):
+    """
+    Check status of the matlab job in osparc
+    - if finished, unzips results and puts in static folder for frontend to view
+    """
+    payload = check_job_status(job_id)
+
+    if payload.get("success", False):
+        # get outputs. Unzip to static dir so frontend can read the image path
+        static_dir_for_job = os.path.join(static_dir, "jobs-results", job_id)
+
+    # don't need to return outputs to the front end, just tell the front and that we are done, and frontend can then retrieve images from the flask static folder
+    return payload
 
 
 def check_job_status(job_id):
@@ -172,26 +263,9 @@ def check_job_status(job_id):
                 download_path: str = files_api.download_file(file_id=results_file.id)
                 
                 print(f"Download path: {download_path}")
-                Path(osparc_extracted_tmp_path).mkdir(parents=True, exist_ok=True)
-
-                # dir where the outputs will be written 
-                tmp_dir_path_for_job_outputs = os.path.join(osparc_extracted_tmp_path, job_id)
-                with zipfile.ZipFile(download_path, 'r') as zip_ref:
-                    zip_ref.extractall(tmp_dir_path_for_job_outputs)
-
-                # file to read
-                # right now assuming just that one file
-                # would just make a loop for doing multiple files
-                final_file_path = os.path.join(tmp_dir_path_for_job_outputs, output_json_filename)
-                plaintext_response = Path(final_file_path).read_text()
-                print(plaintext_response)
 
                 payload = {
                     "download_path": download_path,
-                    "outputs": {
-                        "output1": json.loads(plaintext_response),
-                        # for other files, add more here probably
-                    },
                     "finished": True,
                     "progress_percent": status.progress,
                     "success": True,
@@ -200,10 +274,14 @@ def check_job_status(job_id):
                     "status_code": 200,
                 }
 
+                return payload
+
 
 
             elif status.state in ["ABORTED", "FAILED"]:
                 # Something went wrong in OSPARC, user should not keep retrying
+                print("status for osparc job:", status)
+
                 payload = {
                     "finished": True,
                     "success": False,
@@ -269,3 +347,18 @@ def setup_api(api_client):
     print(solver.id, solver.version)
 
     return [solvers_api, solver, files_api]
+
+def unzip_osparc_outputs(download_path, target_unzip_dir_path):
+    """
+    @param target_unzip_dir_path where to unzip the output_1 zip to
+    @return dir_path_for_job_outputs, where the unzipped files got put
+    """
+    # make sure target dir exists if not already
+    Path(target_unzip_dir_path).mkdir(parents=True, exist_ok=True)
+
+    # dir where the outputs will be written 
+    dir_path_for_job_outputs = os.path.join(osparc_extracted_tmp_path, job_id)
+    with zipfile.ZipFile(download_path, 'r') as zip_ref:
+        zip_ref.extractall(target_unzip_dir_path)
+
+    return dir_path_for_job_outputs

@@ -40,20 +40,27 @@ def set_routes(app):
 
         print("json:", request.json)
 
-        payload = job_api.start_osparc_job(dataset_dict)
+        payload = job_api.start_python_osparc_job(dataset_dict)
 
         resp = make_response(json.dumps(payload), payload["status_code"])
         return resp
 
 
     # letting cors get setup in settings.py instead
-    @app.route('/api/check-osparc-job/', defaults={'job_id': ""}, methods=['GET'])
-    @app.route('/api/check-osparc-job/<string:job_id>', methods=['GET'])
-    def check_job_status(job_id):
+    @app.route('/api/check-osparc-job/<string:job_type>', defaults={'job_id': ""}, methods=['GET'])
+    @app.route('/api/check-osparc-job/<string:job_type>/<string:job_id>', methods=['GET'])
+    def check_job_status(job_type, job_id):
         if job_id == "":
             return "Job ID is required"
 
-        payload = job_api.check_job_status(job_id)
+        if job_type == "":
+            return "Job type is required (currently only two types: python or matlab)"
+
+        elif job_type == "python":
+            payload = job_api.check_python_job_status(job_id)
+        elif job_type == "matlab":
+            payload = job_api.check_matlab_job_status(job_id)
+
         resp = make_response(json.dumps(payload), payload["status_code"])
         return resp
 
