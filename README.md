@@ -76,7 +76,7 @@ The output of KnowMore consists of multiple interactive visualization items disp
     <td>High-level connections (authors, institutions, funding organisms, etc.)</td>
     <td> 
       <a href="https://fdilab.gitbook.io/api-handbook/sparc-metadata-elasticsearch/untitled"> SciCrunch Elasticsearch API</a>, 
-      <a href="http://sparc-data.scicrunch.io:9000/scigraph/docs/"> SciCrunch Graph API (Not yet implemented)</a>, 
+      <a href="http://sparc-data.scicrunch.io:9000/scigraph/docs/"> SciCrunch Graph API</a> (Not yet implemented), 
       <a href="https://docs.pennsieve.io/reference/discover_datasets"> Pennsieve </a> 
     </td>
     <td>&#9989</td>
