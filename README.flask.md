@@ -7,10 +7,10 @@ Clone the repo and submodules
 git clone https://github.com/SPARC-FAIR-Codeathon/KnowMore.git --recurse
 ```
 ## Setup Flask
-### cd into this folder
+### cd into the root folder of this repo
 
 ```sh
-cd ./flask_server
+cd ./KnowMore
 ```
 
 ### Setup venv
