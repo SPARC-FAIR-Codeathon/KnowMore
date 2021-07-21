@@ -177,6 +177,7 @@ def check_python_job_status(job_id):
 
 
 
+
     return payload
 
 def check_matlab_job_status(job_id):
@@ -188,7 +189,8 @@ def check_matlab_job_status(job_id):
 
     if payload.get("success", False):
         # get outputs. Unzip to static dir so frontend can read the image path
-        static_dir_for_job = os.path.join(static_dir, "jobs-results", job_id)
+        # unzip_osparc_outputs will namespace by job id
+        static_dir_for_job = os.path.join(static_dir, "jobs-results")
         dir_path_for_job_outputs = unzip_osparc_outputs(job_id, payload["download_path"], static_dir_for_job)
 
     # don't need to return outputs to the front end, just tell the front and that we are done, and frontend can then retrieve images from the flask static folder
