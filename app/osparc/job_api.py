@@ -109,6 +109,7 @@ def start_osparc_job(input_file_paths):
             # set to respective key for the dict to send to osparc
             job_inputs[key] = input_file
 
+        print("job inputs dict:", job_inputs)
         try:
             job: Job = solvers_api.create_job(
                 solver.id,
@@ -149,7 +150,7 @@ def check_python_job_status(job_id):
     
     if payload.get("success", False):
         # get outputs. Unzip to a different tmp path for now, then just get the plaintext response to send to frontend
-        dir_path_for_job_outputs = unzip_osparc_outputs(payload["download_path"], osparc_extracted_tmp_path)
+        dir_path_for_job_outputs = unzip_osparc_outputs(job_id, payload["download_path"], osparc_extracted_tmp_path)
 
         # file in the output that has the json that we expect from python osparc job
         # right now assuming just that one file
@@ -189,6 +190,7 @@ def check_matlab_job_status(job_id):
     if payload.get("success", False):
         # get outputs. Unzip to static dir so frontend can read the image path
         static_dir_for_job = os.path.join(static_dir, "jobs-results", job_id)
+        dir_path_for_job_outputs = unzip_osparc_outputs(job_id, payload["download_path"], static_dir_for_job)
 
     # don't need to return outputs to the front end, just tell the front and that we are done, and frontend can then retrieve images from the flask static folder
     return payload
@@ -259,7 +261,7 @@ def check_job_status(job_id):
                 # we're only taking the first one
                 print(f"Now downloading to disk path:")
                 results_file: File = outputs.results[output_result_to_use]
-                print(f"file id: {results_file.id}")
+                #print(f"file id: {results_file.id}")
                 download_path: str = files_api.download_file(file_id=results_file.id)
                 
                 print(f"Download path: {download_path}")
@@ -348,17 +350,19 @@ def setup_api(api_client):
 
     return [solvers_api, solver, files_api]
 
-def unzip_osparc_outputs(download_path, target_unzip_dir_path):
+def unzip_osparc_outputs(job_id, download_path, target_unzip_dir_path):
     """
-    @param target_unzip_dir_path where to unzip the output_1 zip to
+    @param target_unzip_dir_path where to unzip the output_1 zip to. This script will add a subdirectory based on job_id to namespace the different files
     @return dir_path_for_job_outputs, where the unzipped files got put
     """
+    # namespace using subdirectory based on job id
+    dir_path_for_job_outputs = os.path.join(target_unzip_dir_path, job_id)
+
     # make sure target dir exists if not already
-    Path(target_unzip_dir_path).mkdir(parents=True, exist_ok=True)
+    Path(dir_path_for_job_outputs).mkdir(parents=True, exist_ok=True)
 
     # dir where the outputs will be written 
-    dir_path_for_job_outputs = os.path.join(osparc_extracted_tmp_path, job_id)
     with zipfile.ZipFile(download_path, 'r') as zip_ref:
-        zip_ref.extractall(target_unzip_dir_path)
+        zip_ref.extractall(dir_path_for_job_outputs)
 
     return dir_path_for_job_outputs

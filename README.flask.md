@@ -144,3 +144,14 @@ docker run --name flask-for-podcast-tool -p 5000:5000 flask-for-podcast-image:la
 curl http://127.0.0.1:5000/api/check-osparc-job/123e4567-e89b-12d3-a456-426614174000
 # example response: {"error": "{\"errors\":[\"project 123e4567-e89b-12d3-a456-426614174000 not found\"]}", "status_code": 500}
 ```
+
+### Test out the python methods without using frontend
+```
+python3 manual-job-starter.py
+```
+
+To not create job, but use existing job, pass in a single arg with job uuid of python job (NOT THE MATLAB JOB ID)
+e.g., 
+```
+python3 manual-job-starter.py e9012487-5ff1-4112-aa4f-8165915973fa
+```
