@@ -125,17 +125,8 @@ git push heroku main
 # TODOs
 - use production server, rather than dev server
 - build a new docker image (current one is outdated)
-```
-# remove old container 
-docker stop flask-for-podcast-tool
-docker rm flask-for-podcast-tool
+- upload all files to s3 instead of to local filesystem (especially due to the nature of [Heroku's ephemeral filesystem](https://devcenter.heroku.com/articles/dynos#ephemeral-filesystem))
 
-# write new image
-docker build -t flask-for-podcast-image .
-
-# start it again
-docker run --name flask-for-podcast-tool -p 5000:5000 flask-for-podcast-image:latest
-```
 
 # Debugging
 ## Helpful scripts
