@@ -131,3 +131,4 @@ dmypy.json
 run-manual-job.sh
 static/**
 !static/.placeholder
+sparc-app
