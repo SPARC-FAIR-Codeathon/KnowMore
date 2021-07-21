@@ -111,7 +111,11 @@ http://127.0.0.1:5000/
 Want to develop without starting the osparc jobs? 
 
 set env var (to anything other than string 'false')
+```
 OSPARC_TEST_MODE=true
+```
+
+This will make it so you don't actually contact osparc, but instead receive sample data back. Helpful for debugging frontend without having to wait for osparc job everytime. 
 
 # Deploy
 ```
