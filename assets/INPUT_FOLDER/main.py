@@ -9,14 +9,18 @@ import json
 import requests
 import matplotlib
 import shutil
+import nltk
+nltk.download('stopwords')
+nltk.download('punkt')
 from nltk.tokenize import word_tokenize, sent_tokenize
 from nltk.corpus import stopwords
 from nltk.stem.snowball import SnowballStemmer
 from nltk.stem import WordNetLemmatizer
 from nltk.cluster.util import cosine_distance
 import networkx as nx
-import nltk
 import spacy
+import xlsxwriter
+
 # NOTE: To install the library
 # TODO: pip install https://s3-us-west-2.amazonaws.com/ai2-s2-scispacy/releases/v0.4.0/en_core_sci_md-0.4.0.tar.gz
 matplotlib.use('Agg')
@@ -313,6 +317,19 @@ def get_image_files(datasetId):
                 pass
     return datafile_image
 
+def get_image_files_biolucida(datasetId):
+    datafile_image = {}
+    url = "https://sparc.biolucida.net/api/v1/imagemap/search_dataset/discover/" + datasetId
+    payload={}
+    headers = {
+      'token': ''
+    }
+    
+    response = requests.request("GET", url, headers=headers, data=payload)
+    
+    print(response.text)
+    
+#get_image_files_biolucida('60')
 
 # data processing
 def get_knowledge_graph_data(datasetId):
@@ -590,9 +607,7 @@ def get_all_datasets_mat_files(list_datasetId):
 #        pd.read_csv(io.StringIO(df.to_csv(index=False)), header=None).to_excel(
 #                matlab_excel_file, header=None, index=None)
         output_zip_folder = os.path.join(matlab_input_save_folder + ".zip")
-        print(output_zip_folder)
         if os.path.exists(output_zip_folder):
-            print(output_zip_folder)
             os.remove(output_zip_folder)
             
         shutil.make_archive(matlab_input_save_folder, 'zip', output_dir,
@@ -609,29 +624,29 @@ list_datasetId = [str(x) for x in list_datasetId]
 # storage dict to be saved as a json and returned to front-end
 dataset_data = {}
 
-## knowledge graph data
-#dataset_data['knowledge_graph'] = {}
-#for datasetId in list_datasetId:
-#    dataset_data['knowledge_graph'][datasetId] = get_knowledge_graph_data(
-#            datasetId)
-#
-## summary table
-#dataset_data['summary table'] = {}
-#for datasetId in list_datasetId:
-#    dataset_data['summary table'][datasetId] = get_summary_table_data(
-#        datasetId)
-#
-## keywords
-#data_text = get_all_datasets_text(list_datasetId)
-#keywords = get_keywords(data_text)
-#dataset_data['keywords'] = keywords
-#
-## abstract
-#abstract = get_abstract(data_text)
-#dataset_data['abstract'] = abstract
-#
-## text correlation matrix
-#dataset_data['correlation_matrix'] = get_text_correlation(data_text)
+# knowledge graph data
+dataset_data['knowledge_graph'] = {}
+for datasetId in list_datasetId:
+    dataset_data['knowledge_graph'][datasetId] = get_knowledge_graph_data(
+            datasetId)
+
+# summary table
+dataset_data['summary table'] = {}
+for datasetId in list_datasetId:
+    dataset_data['summary table'][datasetId] = get_summary_table_data(
+        datasetId)
+
+# keywords
+data_text = get_all_datasets_text(list_datasetId)
+keywords = get_keywords(data_text)
+dataset_data['keywords'] = keywords
+
+# abstract
+abstract = get_abstract(data_text)
+dataset_data['abstract'] = abstract
+
+# text correlation matrix
+dataset_data['correlation_matrix'] = get_text_correlation(data_text)
 
 # matlab_input files generator
 get_all_datasets_mat_files(list_datasetId)
