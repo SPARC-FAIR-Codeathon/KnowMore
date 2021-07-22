@@ -121,14 +121,10 @@ KnowMore is distributed under the MIT License. See [LICENSE](https://github.com/
 ## Team
 * [Bhavesh Patel](https://github.com/bvhpatel/) (Lead)
 * [Ryan Quey](https://github.com/RyanQuey) (SysAdmin)
-* [Eric Ramirez](https://github.com/netshadows/) (ML lead)
 * [Anmol Kiran](https://github.com/codemeleon) (Writer - Documentation)
 * [Matthew Schiefer](https://github.com/schiefma/) (Writer - Manuscript)
 
 ## Acknowledgements
-
-
-
 [contributors-shield]: https://img.shields.io/github/contributors/SPARC-FAIR-Codeathon/KnowMore.svg?style=flat-square
 [contributors-url]: https://github.com/SPARC-FAIR-Codeathon/KnowMore/graphs/contributors
 [stars-shield]: https://img.shields.io/github/stars/SPARC-FAIR-Codeathon/KnowMore.svg?style=flat-square
