@@ -17,7 +17,6 @@ from nltk.cluster.util import cosine_distance
 import networkx as nx
 import nltk
 import spacy
-
 # NOTE: To install the library
 # TODO: pip install https://s3-us-west-2.amazonaws.com/ai2-s2-scispacy/releases/v0.4.0/en_core_sci_md-0.4.0.tar.gz
 matplotlib.use('Agg')
@@ -578,15 +577,26 @@ def get_all_datasets_mat_files(list_datasetId):
                     os.makedirs(mat_file_folder) 
                 mat_file_path = os.path.join(mat_file_folder, mat_file_name)                
                 response = dataset_mat[filepath]
-#                with open(mat_file_path, 'wb') as f:
-#                    f.write(response.content)
-                with open(mat_file_path, 'w', encoding="utf-8") as f:
-                    f.write(response.text)
+                with open(mat_file_path, 'wb') as f:
+                    f.write(response.content)
+#                with open(mat_file_path, 'w', encoding="utf-8") as f:
+#                    f.write(response.text)
     if len(full_datasetId_list)>0:
         df["datasetId"] = full_datasetId_list
         df["filepath"] = filepath_list
-        df.to_excel(os.path.join(matlab_input_save_folder, 'matlab_input.xlsx'), index=False)
-        shutil.make_archive(matlab_input_save_folder, 'zip', output_dir, matlab_input_folder_name)
+        matlab_excel_file = os.path.join(matlab_input_save_folder, 'matlab_input.xlsx')
+        df.to_excel(matlab_excel_file, sheet_name='Sheet1', 
+                    engine = 'xlsxwriter', index=False)
+#        pd.read_csv(io.StringIO(df.to_csv(index=False)), header=None).to_excel(
+#                matlab_excel_file, header=None, index=None)
+        output_zip_folder = os.path.join(matlab_input_save_folder + ".zip")
+        print(output_zip_folder)
+        if os.path.exists(output_zip_folder):
+            print(output_zip_folder)
+            os.remove(output_zip_folder)
+            
+        shutil.make_archive(matlab_input_save_folder, 'zip', output_dir,
+                            matlab_input_folder_name)
     return        
         
 # Test
@@ -599,29 +609,29 @@ list_datasetId = [str(x) for x in list_datasetId]
 # storage dict to be saved as a json and returned to front-end
 dataset_data = {}
 
-# knowledge graph data
-dataset_data['knowledge_graph'] = {}
-for datasetId in list_datasetId:
-    dataset_data['knowledge_graph'][datasetId] = get_knowledge_graph_data(
-            datasetId)
-
-# summary table
-dataset_data['summary table'] = {}
-for datasetId in list_datasetId:
-    dataset_data['summary table'][datasetId] = get_summary_table_data(
-        datasetId)
-
-# keywords
-data_text = get_all_datasets_text(list_datasetId)
-keywords = get_keywords(data_text)
-dataset_data['keywords'] = keywords
-
-# abstract
-abstract = get_abstract(data_text)
-dataset_data['abstract'] = abstract
-
-# text correlation matrix
-dataset_data['correlation_matrix'] = get_text_correlation(data_text)
+## knowledge graph data
+#dataset_data['knowledge_graph'] = {}
+#for datasetId in list_datasetId:
+#    dataset_data['knowledge_graph'][datasetId] = get_knowledge_graph_data(
+#            datasetId)
+#
+## summary table
+#dataset_data['summary table'] = {}
+#for datasetId in list_datasetId:
+#    dataset_data['summary table'][datasetId] = get_summary_table_data(
+#        datasetId)
+#
+## keywords
+#data_text = get_all_datasets_text(list_datasetId)
+#keywords = get_keywords(data_text)
+#dataset_data['keywords'] = keywords
+#
+## abstract
+#abstract = get_abstract(data_text)
+#dataset_data['abstract'] = abstract
+#
+## text correlation matrix
+#dataset_data['correlation_matrix'] = get_text_correlation(data_text)
 
 # matlab_input files generator
 get_all_datasets_mat_files(list_datasetId)
