@@ -43,7 +43,7 @@ While it is very easy to look at the findings of each individual dataset on the 
 
 
 ## Our Solution - KnowMore
-To address this problem, we have developed a tool called KnowMore for the SPARC Data Portal. KnowMore is an automated knowledge discovery tool that allows users of the portal to visualize, in just a few click, potential relations and/or correlation between multiple SPARC datasets of their choice. This simple process is illustrated in the figure below. 
+To address this problem, we have developed a tool called KnowMore. KnowMore is an automated knowledge discovery tool integrated within the SPARC Portal that allows users of the portal to visualize, in just a few click, potential relations and/or correlation between multiple SPARC datasets of their choice. This simple process is illustrated in the figure below. 
 
 <br/>
 <p align="center">
