@@ -114,7 +114,7 @@ The front end of our app is based on a fork of the sparc-app. The documentation 
 Our back-end consists of a flask-server that communicates with osparc. The documentation for using/editing it is [available here](https://github.com/SPARC-FAIR-Codeathon/KnowMore/blob/main/README.flask.md).
 
 ## License
-KnowMore is distributed under the MIT License. See [LICENSE](https://github.com/SPARC-FAIR-Codeathon/KnowMore/blob/main/LICENSE) for more information.
+KnowMore is fully Open Source and distributed under the very permissive MIT License. See [LICENSE](https://github.com/SPARC-FAIR-Codeathon/KnowMore/blob/main/LICENSE) for more information.
 
 <!-- ## FAIR practices -->
 
