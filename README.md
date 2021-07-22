@@ -2,6 +2,7 @@
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
 [![MIT License][license-shield]][license-url]
+[![Lines of code][lines-of-code-shield]][lines-of-code-url]
 <!-- [![DOI](https://zenodo.org/badge/185270688.svg)](https://zenodo.org/badge/latestdoi/185270688) -->
 
 <!-- HEADER -->
@@ -133,3 +134,5 @@ KnowMore is distributed under the MIT License. See [LICENSE](https://github.com/
 [issues-url]: https://github.com/SPARC-FAIR-Codeathon/KnowMore/issues
 [license-shield]: https://img.shields.io/github/license/SPARC-FAIR-Codeathon/KnowMore.svg?style=flat-square
 [license-url]: https://github.com/SPARC-FAIR-Codeathon/KnowMore/blob/master/LICENSE
+[lines-of-code-shield]: https://img.shields.io/tokei/lines/github/SPARC-FAIR-Codeathon/KnowMore
+[lines-of-code-url]: #
