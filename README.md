@@ -16,8 +16,6 @@
   <p align="center">
      <br/>
     <a href="https://github.com/SPARC-FAIR-Codeathon/KnowMore/issues">Report Issue</a>
-    ·
-    <a href="comingsoon">Submit feedback </a>
   </p>
 </p>
 
