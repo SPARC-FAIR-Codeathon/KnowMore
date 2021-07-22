@@ -561,6 +561,7 @@ def get_text_correlation(data_text):
     plot = sns.heatmap(cor_matrix, cmap='coolwarm')
     fig = plot.get_figure()
     fig.savefig(os.path.join(output_dir, "Correlation_heatmap.png"))
+    fig.savefig(os.path.join(output_dir, "Correlation_heatmap.svg"))
     fig.clf()
 
     return cor_matrix.to_json()
