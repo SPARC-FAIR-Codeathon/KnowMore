@@ -187,11 +187,11 @@ To use the source code, clone or download the repository first.
 git clone https://github.com/SPARC-FAIR-Codeathon/KnowMore.git --recurse
 ```
 
-Run our back-end flask-server following the documentation [available here](https://github.com/SPARC-FAIR-Codeathon/KnowMore/blob/main/README.flask.md).
+Then run our back-end flask-server following the documentation [available here](https://github.com/SPARC-FAIR-Codeathon/KnowMore/blob/main/README.flask.md).
 
-Run our fork the sparc-app by following the documentation [available here](https://github.com/RyanQuey/sparc-app/tree/84ab5df2203ef0a551051cf0ac037762dbc4e7dc).
+Finally, run our fork the sparc-app by following the documentation [available here](https://github.com/RyanQuey/sparc-app/tree/84ab5df2203ef0a551051cf0ac037762dbc4e7dc).
 
-Our back-end data processing programs consists of a Matlab code for handling 'MAT' files (when found in a dataset) and a Python code for processing all other data types. They run on osparc and, as such, do not require any local setup. The documentation for using/editing them is, however, [available here](https://github.com/SPARC-FAIR-Codeathon/KnowMore/blob/main/assets/INPUT_FOLDER/README.md) if needed.
+Our back-end data processing program consists of a Matlab code for handling 'MAT' files (when found in a dataset) and a Python code for processing all other data types. They run on osparc and, as such, do not require any local setup. The documentation for using/editing them is, however, [available here](https://github.com/SPARC-FAIR-Codeathon/KnowMore/blob/main/assets/INPUT_FOLDER/README.md) if needed.
 
 ## License
 KnowMore is fully Open Source and distributed under the very permissive MIT License. See [LICENSE](https://github.com/SPARC-FAIR-Codeathon/KnowMore/blob/main/LICENSE) for more information.
