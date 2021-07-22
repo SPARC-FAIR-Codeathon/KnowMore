@@ -1,18 +1,25 @@
-import anmol
 from PIL import Image
 import os
 import re
 import io
 import seaborn as sns
-from pylab import *
 import numpy as np
 import pandas as pd
 import json
 import requests
 import matplotlib
 import shutil
-from scipy.io import loadmat, savemat
+from nltk.tokenize import word_tokenize, sent_tokenize
+from nltk.corpus import stopwords
+from nltk.stem.snowball import SnowballStemmer
+from nltk.stem import WordNetLemmatizer
+from nltk.cluster.util import cosine_distance
+import networkx as nx
+import nltk
+import spacy
 
+# NOTE: To install the library
+# TODO: pip install https://s3-us-west-2.amazonaws.com/ai2-s2-scispacy/releases/v0.4.0/en_core_sci_md-0.4.0.tar.gz
 matplotlib.use('Agg')
 
 
@@ -32,6 +39,124 @@ else:
                               'fake-uuid-for-sample-data', 'OUTPUT_FOLDER')
 matlab_input_folder_name = 'matlab-input-folder'
 matlab_input_save_folder = os.path.join(output_dir, matlab_input_folder_name)
+
+#helper functions
+
+
+
+nlp = spacy.load("en_core_sci_md")
+stop_words = set(stopwords.words("english"))
+stemmer = SnowballStemmer("english")  # PorterStemmer()
+lemmatizer = WordNetLemmatizer()
+tokenizer = nltk.RegexpTokenizer(r"\w+")
+
+def keywords_finder(text):
+    """Return keywords after removing list of not required words."""
+    words = nlp(text).ents
+    return words
+
+def NestedDictValues(d):
+    for v in d.values():
+        if isinstance(v, dict):
+            yield from NestedDictValues(v)
+        else:
+            yield v
+
+# summariser
+def sentence_similarity(sent1, sent2, stopwords=None):
+    if stopwords is None:
+        stopwords = []
+
+    sent1 = [w.lower() for w in sent1]
+    sent2 = [w.lower() for w in sent2]
+
+    all_words = list(set(sent1 + sent2))
+
+    vector1 = [0] * len(all_words)
+    vector2 = [0] * len(all_words)
+
+    # build the vector for the first sentence
+    for w in sent1:
+        if w in stopwords:
+            continue
+        vector1[all_words.index(w)] += 1
+
+    # build the vector for the second sentence
+    for w in sent2:
+        if w in stopwords:
+            continue
+        vector2[all_words.index(w)] += 1
+
+    return 1 - cosine_distance(vector1, vector2)
+
+
+def build_similarity_matrix(sentences, stop_words):
+    # Create an empty similarity matrix
+    similarity_matrix = np.zeros((len(sentences), len(sentences)))
+
+    for idx1 in range(len(sentences)):
+        for idx2 in range(len(sentences)):
+            if idx1 == idx2:  # ignore if both are same sentences
+                continue
+            similarity_matrix[idx1][idx2] = sentence_similarity(
+                sentences[idx1], sentences[idx2], stop_words)
+    return similarity_matrix
+
+
+def summariser(merged_text, top_n=5):
+    sentences = sent_tokenize(merged_text)
+    stop_words = stopwords.words('english')
+    summarize_text = []
+
+    sentence_similarity_martix = build_similarity_matrix(sentences, stop_words)
+
+    sentence_similarity_graph = nx.from_numpy_array(sentence_similarity_martix)
+    scores = nx.pagerank(sentence_similarity_graph)
+
+    ranked_sentence = sorted(
+        ((scores[i], s) for i, s in enumerate(sentences)), reverse=True)
+    # print("Indexes of top ranked_sentence order are ", ranked_sentence)
+
+    for i in range(top_n):
+        summarize_text.append(ranked_sentence[i][1])
+
+    return " ".join(summarize_text)
+
+
+def summariser2(merged_text):
+    # TODO: Compare sentences and remove duplicates as text are from multiple ids
+    stopWords = set(stopwords.words("english"))
+    words = word_tokenize(merged_text)
+    freqTable = dict()
+    for word in words:
+        word = word.lower()
+        if word in stopWords:
+            continue
+        if word not in freqTable:
+            freqTable[word] = 0
+        freqTable[word] += 1
+
+    sentences = sent_tokenize(merged_text)
+    sentenceValue = dict()
+
+    for sentence in sentences:
+        for word, freq in freqTable.items():
+            if word in sentence.lower():
+                if sentence not in sentenceValue:
+                    sentenceValue[sentence] = freq
+                else:
+                    sentenceValue[sentence] += freq
+
+    sumValues = sum(sentenceValue.values())
+    average = int(sumValues/len(sentenceValue))
+    summary = ""
+    for sentence in sentences:
+        try:
+            if sentenceValue[sentence] > 1.2 * average:
+                summary += " "+sentence
+        except KeyError:
+            continue
+    return summary
 
 # functions to get dataset from various sparc ressources
 def get_dataset_latest_version(datasetId):
@@ -164,7 +289,6 @@ def get_dataset_mat_files(datasetId):
         if file_info['fileType'] == 'MAT':
             filepath = file_info['path']
             if 'derivative' in filepath:
-                print(filepath)
                 response = get_dataset_file_response(datasetId, filepath)
                 datafile_mat[filepath] = response
     return datafile_mat
@@ -177,14 +301,12 @@ def get_image_files(datasetId):
         if file_info['fileType'] == 'TIFF':
             try:
                 filepath = file_info['path']
-                print(filepath)
                 response = get_dataset_file_response(datasetId, filepath)
                 # Create an in-memory stream of the content
                 sio = io.BytesIO(response.content)
                 img = Image.open(sio)
                 image_name = str(datasetId) + "-" + \
                     str(os.path.basename(filepath))
-                print(image_name, img)
                 # img.save(image_name)
                 datafile_image[filepath] = img
             except:
@@ -303,12 +425,12 @@ def get_keywords(data_text):
     all_keyword_df = []
     for datasetId in data_text:
         index.append(datasetId)
-        text = " ".join(list(anmol.NestedDictValues(data_text[datasetId])))
+        text = " ".join(list(NestedDictValues(data_text[datasetId])))
 
         # data_text[datasetId]["description"] + \
         # " ".join(data_text[datasetId]["protocol"].values())
         text = text.replace("*", "").replace("\n", " ")
-        words = [str(word) for word in anmol.keywords(text)]
+        words = [str(word) for word in keywords_finder(text)]
         # Cleaning
         keywords_json = {}
         # print(words)
@@ -355,8 +477,8 @@ def get_abstract(data_text):
     # text_to_summarise.append(data_text[datasetId]["description"])
     # text_to_summarise = " ".join(text_to_summarise)
 
-    text_to_summarise = " ".join(list(anmol.NestedDictValues(data_text)))
-    abstract = anmol.summariser(text_to_summarise, top_n=10)
+    text_to_summarise = " ".join(list(NestedDictValues(data_text)))
+    abstract = summariser(text_to_summarise, top_n=10)
 
     # abstract = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
     return abstract
@@ -373,12 +495,12 @@ def get_text_correlation(data_text):
     all_keyword_df = []
     for datasetId in data_text:
         index.append(datasetId)
-        text = " ".join(list(anmol.NestedDictValues(data_text[datasetId])))
+        text = " ".join(list(NestedDictValues(data_text[datasetId])))
 
         # data_text[datasetId]["description"] + \
         # " ".join(data_text[datasetId]["protocol"].values())
         text = text.replace("*", "").replace("\n", " ")
-        words = [str(word) for word in anmol.keywords(text)]
+        words = [str(word) for word in keywords_finder(text)]
         # Cleaning
         keywords_json = {}
         # print(words)
@@ -419,8 +541,11 @@ def get_text_correlation(data_text):
     cor_matrix = pd.DataFrame(cor_matrix)
     cor_matrix = cor_matrix.pivot(
         index="from dataset ID", columns="to dataset ID", values="value")
-    sns.heatmap(cor_matrix, cmap='coolwarm')
-    savefig(os.path.join(output_dir, "Correlation_heatmap.png"))
+    
+    plot = sns.heatmap(cor_matrix, cmap='coolwarm')
+    fig = plot.get_figure()
+    fig.savefig(os.path.join(output_dir, "Correlation_heatmap.png"))
+    fig.clf()
 
     return cor_matrix.to_json()
 
@@ -443,7 +568,6 @@ def get_all_datasets_mat_files(list_datasetId):
             for filepath in dataset_mat.keys():
                 #matlab-input.xlsx data
                 full_datasetId_list.append(int(datasetId))
-                print('filepath', filepath)
                 ps_file_path = "/".join(filepath.strip("/").split('/')[1:])
                 filepath_list.append(ps_file_path)
                 
@@ -471,19 +595,15 @@ datasetIdsinput = json.load(open(input_file))
 list_datasetId = datasetIdsinput['datasetIds']
 list_datasetId = [str(x) for x in list_datasetId]
 #list_datasetId = ['60']
-# for datasetId in list_datasetId:
-#    get_image_files(datasetId)
-#
-# asfasf
-# storage dict to be saved as a json and returned to front-end
 
+# storage dict to be saved as a json and returned to front-end
 dataset_data = {}
 
 # knowledge graph data
-# dataset_data['knowledge_graph'] = {}
-# for datasetId in list_datasetId:
-# dataset_data['knowledge_graph'][datasetId] = get_knowledge_graph_data(
-# datasetId)
+dataset_data['knowledge_graph'] = {}
+for datasetId in list_datasetId:
+    dataset_data['knowledge_graph'][datasetId] = get_knowledge_graph_data(
+            datasetId)
 
 # summary table
 dataset_data['summary table'] = {}
@@ -492,25 +612,21 @@ for datasetId in list_datasetId:
         datasetId)
 
 # keywords
-#data_text = get_all_datasets_text(list_datasetId)
-#keywords = get_keywords(data_text)
-#dataset_data['keywords'] = keywords
-
-# text correlation matrix
-#correlation_matrix = get_correlation_matrix(data_text)
+data_text = get_all_datasets_text(list_datasetId)
+keywords = get_keywords(data_text)
+dataset_data['keywords'] = keywords
 
 # abstract
-#abstract = get_abstract(data_text)
-#dataset_data['abstract'] = abstract
-#dataset_data['correlation_matrix'] = get_text_correlation(data_text)
+abstract = get_abstract(data_text)
+dataset_data['abstract'] = abstract
 
+# text correlation matrix
+dataset_data['correlation_matrix'] = get_text_correlation(data_text)
 
-#matlab_input files generator
+# matlab_input files generator
 get_all_datasets_mat_files(list_datasetId)
 
 # save output
 output_file = os.path.join(output_dir, 'output.json')
 with open(output_file, 'w+') as f:
-    # this would place the entire output on one line
-    # use json.dump(lista_items, f, indent=4) to "pretty-print" with four spaces per indent
-    json.dump(dataset_data, f)
+    json.dump(dataset_data, f, indent=4)
