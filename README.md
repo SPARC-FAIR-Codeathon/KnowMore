@@ -57,8 +57,7 @@ To address this problem, we have developed a tool called KnowMore. KnowMore is a
 </p> 
 <br/>
 
-The output of KnowMore consists of multiple interactive visualization items displayed to the user such that they can progressively gain knowledge on the potential similarities, differences, and relations across the datasets. A list of the visulalization items is provided in the table below. 
-
+The output of KnowMore consists of multiple interactive visualization items displayed to the user such that they can progressively gain knowledge on the potential similarities, differences, and relations across the datasets. This output is intended to provide foundational information to the user such that they can rapidly make make new discoveries from SPARC datasets, generate new hypothesis, or simply decide on their next step (analyze datasets further, remove/add datasets, etc.). A list of the visulalization items is provided in the table below. 
 
 <table>
 <thead>
@@ -119,7 +118,7 @@ The output of KnowMore consists of multiple interactive visualization items disp
 </p>
 <br/>
 
-A screenshot of a sample output is presented in the figure below. This output can provide a foundation to the user for rapidly identifying potential relations or previously unknown correlations between the data and proceed accordingly in their investigation.
+A sample output is presented in the figure below. 
 
 <br/>
 <p align="center">
@@ -133,13 +132,10 @@ A screenshot of a sample output is presented in the figure below. This output ca
 
 
 
-Under the hood, KnowMore uses several Machine Learning and Data Science workflows to output the above-mentioned elements, including:
-*	Natural Language Processing
-*	Image classification
-*	Correlation matrix
+Under the hood, KnowMore uses several Machine Learning and Data Science workflows to output the above-mentioned elements, including Natural Language Processing (NLP), Image clustering, and Data Correlation.
 
 ## Workflow
-The overall workflow of KnowMore is shown in the figure below. 
+The overall workflow of KnowMore is shown in the figure below. The front end of our app is based on a fork of the sparc-app where we have integrated additional UI elements and back-end logic for KnowMore. The back-end consists of a Flask server that listen to front-end requests and launches the data processing jobs on osparc accordingly. 
 
 <br/>
 <p align="center">
@@ -150,7 +146,11 @@ The overall workflow of KnowMore is shown in the figure below.
  </p> 
 <br/>
 
-
+## Usecase
+Our development and testing revolved around these three datasets so we suggest to these only for most interesting results although the code is not specific to them and works for any datasets:
+* [Quantified Morphology of the Rat Vagus Nerve](https://doi.org/10.26275/ilb9-0e2a)
+* [Quantified Morphology of the Pig Vagus Nerve](https://doi.org/10.26275/maq2-eii4)
+* [Quantified Morphology of the Human Vagus Nerve with Anti-Claudin-1](https://doi.org/10.26275/nluu-1ews)
 
 ## Using KnowMore
 You can use KnowMore directly on our fork of the SPARC Data Portal: (add link)
@@ -159,7 +159,7 @@ Follow the steps described below:
 1. Find datasets of interest and click on the "Add to automated discovery" button, visible in the header of the datasets, to add each of them in the KnowMore analysis 
 2. Go to the KnowMore tab, and check that all your selected datasets are listed
 3. Click on "Discover" to initiate the automated discovery process
-4. Wait until the interactive results are displayed
+4. Wait until the results are displayed
 
 ## Using the Source Code
 The front end of our app is based on a fork of the sparc-app. The documentation for using/editing it is [available here](https://github.com/RyanQuey/sparc-app/tree/84ab5df2203ef0a551051cf0ac037762dbc4e7dc).
