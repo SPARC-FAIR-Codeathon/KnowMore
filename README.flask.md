@@ -117,6 +117,38 @@ OSPARC_TEST_MODE=true
 
 This will make it so you don't actually contact osparc, but instead receive sample data back. Helpful for debugging frontend without having to wait for osparc job everytime. 
 
+## Run in Docker
+1) Install Docker
+
+
+2) Create image and start container:
+```
+docker-compose up -d
+```
+
+3) Check Container Status
+```
+docker ps
+```
+
+Should get something like this: 
+
+> CONTAINER ID   IMAGE               COMMAND                  CREATED          STATUS         PORTS                                                        NAMES
+> 368be64c60c1   knowmore_flaskapp   "/entrypoint.sh /sta…"   10 seconds ago   Up 9 seconds   80/tcp, 443/tcp, 0.0.0.0:5000->5000/tcp, :::5000->5000/tcp   knowmore-flask-web-app
+
+Note that this container is exposing port 5000 (the port where flask is listening) to your host.
+
+4) Check and follow logs 
+```
+docker logs knowmore-flask-web-app -f
+```
+
+5) Test the endpoints
+- Using browser or `curl`, try out `http://localhost:5000/`.
+    * Response should be: `status: up`
+- Get a sample image: `http://localhost:5000/api/results-images/example-job-id/Plots-PlotID-3.7.png`
+    * Flask should return the image file.
+
 # Deploy
 ```
 git push heroku main
