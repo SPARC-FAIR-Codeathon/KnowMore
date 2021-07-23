@@ -1,12 +1,3 @@
-# Instructions
-
-Stuff to send to Osparc
-
-NOTE if either of the files get changed, make sure to make a new zip
-```
-zip main.zip requirements.txt main.py
-```
-
 # KnowMore osparc jobs
 This folder contains the files required to run our jobs on [osparc](http://docs.osparc.io/). 
 - We send a input.json (containing dataset Ids) and the main.zip (which has two files zipped: requirements.txt and main.py) to the osparc Python Runner service) which excutes the main.py code and sends back an output.zip folder with requested outputs.
