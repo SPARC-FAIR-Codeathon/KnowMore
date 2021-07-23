@@ -47,27 +47,27 @@ The environment variables required are listed in the table below along with info
   <tr>
     <td>FLASK_ENV</td>
     <td>"development"</td>
-    <td></td>
+    <td>Prod or dev</td>
   </tr>
   <tr>
     <td>SERVER_NAME</td>
     <td>"localhost:5000"</td>
-    <td></td>
+    <td>server url</td>
   </tr>
   <tr>
     <td> LISTEN_PORT</td>
     <td>"5000"</td>
-    <td></td>
+    <td>Port for flask app to listen to</td>
   </tr>
   <tr>
     <td>CLIENT_URL</td>
     <td>"http://localhost:3000"</td>
-    <td></td>
+    <td>Sparc-App url</td>
   </tr>
   <tr>
     <td>OSPARC_TEST_MODE</td>
     <td>false</td>
-    <td></td>
+    <td>whether to use test mode, so you don't have to contact osparc to develop your frontend</td>
   </tr>
   <tr>
     <td>OSPARC_API_KEY</td>
@@ -82,7 +82,7 @@ The environment variables required are listed in the table below along with info
   <tr>
     <td>SECRET_KEY</td>
     <td></td>
-    <td></td>
+    <td>flask secret key</td>
   </tr>
 </tbody>
 </table>
