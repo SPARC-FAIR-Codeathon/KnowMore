@@ -140,7 +140,7 @@ Under the hood, KnowMore uses several Machine Learning and Data Science workflow
 The overall workflow of KnowMore is shown in the figure below. Our architecture consists of three main blocks that can all run independently:
 1. The front end of our app is based on a fork of the sparc-app (i.e. the front-end of sparc.science) where we have integrated additional UI elements and back-end logic for KnowMore. [Learn more about the sparc app](https://github.com/nih-sparc/sparc-app).
 2. The back-end consists of a Flask application that listens to front-end requests and launches the data processing jobs. 
-3. The data processing and result generation is done through a Matlab code (for 'MAT' data files) and Python code (all other data types) that are submitted to osparc, the SPARC supported cloud computing platform. [Learn more about osparc](http://docs.osparc.io/).
+3. The data processing and result generation is done through a Matlab code (for 'MAT' data files) and Python code (all other data types) that run on osparc, the SPARC supported cloud computing platform. [Learn more about osparc](http://docs.osparc.io/).
 
 <br/>
 <p align="center">
@@ -155,7 +155,7 @@ The overall workflow of KnowMore is shown in the figure below. Our architecture 
 Such a design was motivated by our aim of making KnowMore ready to on-board the SPARC Data Portal:
 * Integrating the front-end of KnowMore would only require to merge our fork of the sparc-app with the main branch sparc-app branch.
 * The back-end of the sparc-app, the [sparc-api](https://github.com/nih-sparc/sparc-api), is build with Flask so the KnowMore back-end would be readily compatible.
-* The data processing jobs are designed to run on osparc and would not require any type of integration as our back-end ensure communication with osparc.
+* The data processing jobs are designed to run on osparc, the SPARC supported cloud computing platform, and would not require any type of integration as our back-end ensures communication with osparc.
 
 Moreover, each of the three main elements of KnowMore is fully independent. While the front-end will not be of much use on its own, having the back-end fully interoperable is very valuable as our flask application can be connected to any front-end if needed (another analysis tool, website, software, etc.). The data processing and results generation jobs are also independent such that they can be used directly to get the visualization items, for instance in a Jupyter Notebook. Note that the data for the Knowledge graph is obtained from Pennsieve/Scicrunch on the front-end for efficiency but the same results can be generated in the back-end as well.
 
