@@ -31,6 +31,60 @@ pip install -r requirements.txt
 ### Setup env vars
 The environment variables required are listed in the table below along with information on how to get them
 
+
+<table>
+<thead>
+  <tr>
+    <th>Suggested name</th>
+    <th>Value or instructions for obtaining it</th>
+    <th>Purpose</th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td>FLASK_ENV</td>
+    <td>"development"</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>SERVER_NAME</td>
+    <td>"localhost:5000"</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td> LISTEN_PORT</td>
+    <td>"5000"</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>CLIENT_URL</td>
+    <td>"http://localhost:3000"</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>OSPARC_TEST_MODE</td>
+    <td>false</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>OSPARC_API_KEY</td>
+    <td> <a href="mailto: support@osparc.io"> Contact osparc support </a> </td>
+    <td> Sending jobs to osparc</td>
+  </tr>
+  <tr>
+    <td>OSPARC_API_SECRET</td>
+    <td><a href="mailto: support@osparc.io"> Contact osparc support </a></td>
+    <td>Sending jobs to osparc </td>
+  </tr>
+  <tr>
+    <td>SECRET_KEY</td>
+    <td></td>
+    <td></td>
+  </tr>
+</tbody>
+</table>
+
+
 Each of them can be set in your conda environment as follows
 ```sh
 conda env config vars set MY_VAR=something MY_OTHER_VAR=something_else
