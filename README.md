@@ -73,43 +73,43 @@ The output of KnowMore consists of multiple interactive visualization items disp
   <tr>
     <td>1. Knowledge Graph</td>
     <td>High-level connections (authors, institutions, funding organisms, etc.)</td>
-    <td>SciCrunch</td>
+    <td> <a href="https://fdilab.gitbook.io/api-handbook/sparc-metadata-elasticsearch/untitled"> SciCrunch </a> </td>
     <td>&#9989</td>
   </tr>
   <tr>
     <td>2. Summary Table</td>
     <td>Similarities/differences in the study design</td>
-    <td>Pennsieve </td>
+    <td> <a href="https://docs.pennsieve.io/reference/discover_datasets"> Pennsieve </a> </td>
     <td>&#9989</td>
   </tr>
   <tr>
     <td>3. Data files statistics </td>
     <td>Similarities/differences in datatypes</td>
-    <td>Pennsieve </td>
+    <td> <a href="https://docs.pennsieve.io/reference/discover_datasets"> Pennsieve </a> </td>
     <td>&#10060;</td>
   </tr>
   <tr>
     <td>4. Keywords </td>
     <td>Common themes</td>
-    <td>Pennieve, protocols.io, NLTK</td>
+    <td> <a href="https://docs.pennsieve.io/reference/discover_datasets"> Pennsieve </a>, <a href="https://www.protocols.io/developers"> protocols.io </a> </td>
     <td>&#9989</td>
   </tr>
   <tr>
     <td>5. Abstract </td>
     <td>Common study design and findings </td>
-    <td>Pennieve, protocols.io</td>
+    <td> <a href="https://docs.pennsieve.io/reference/discover_datasets"> Pennsieve </a>, <a href="https://www.protocols.io/developers"> protocols.io </a> </td>
     <td>&#9989</td>
   </tr> 
   <tr>
     <td>6. Data Plots </td>
     <td>Comparision between measured numerical data (if any) </td>
-    <td>Pennieve</td>
+    <td> <a href="https://docs.pennsieve.io/reference/discover_datasets"> Pennsieve </a> </td>
     <td>&#9989</td>
   </tr>
   <tr>
     <td>7. Image clustering </td>
     <td>Comparision between image data (if any) </td>
-    <td>Biolucida</td>
+    <td> <a href="https://documenter.getpostman.com/view/8986837/SVtPXAVm"> Biolucida </a> </td>
     <td>&#10060;</td>
   </tr>
 </tbody>
