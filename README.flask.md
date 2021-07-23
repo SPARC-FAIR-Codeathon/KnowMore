@@ -127,6 +127,8 @@ This will make it so you don't actually contact osparc, but instead receive samp
 docker-compose up -d
 ```
 
+Note that this will use the env vars as specified in your .env file. Make sure you still set those before building the image.
+
 ### 3) Check Container Status
 ```
 docker ps
