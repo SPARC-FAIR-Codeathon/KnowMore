@@ -154,9 +154,9 @@ def check_python_job_status(job_id):
         # file in the output that has the json that we expect from python osparc job
         # right now assuming just that one file
         # would just make a loop for doing multiple files
-        final_file_path = os.path.join(dir_path_for_job_outputs, "output.json")
+        final_json_file_path = os.path.join(dir_path_for_job_outputs, "output.json")
 
-        plaintext_response = Path(final_file_path).read_text()
+        plaintext_response = Path(final_json_file_path).read_text()
         print(plaintext_response)
 
         # add outputs to payload before returning to the front and
@@ -176,6 +176,28 @@ def check_python_job_status(job_id):
             print(e)
 
 
+        # also move this Correlation_heatmap.png image to static dir so frontend can grab it
+        # note that other images will be in static dir under the matlab osparc job ID, this one under the python osparc job id
+        # again, don't let whole job fail if this doesn't work
+        try:
+            # take from subdir in /tmp 
+            correlation_png_source_file_path = os.path.join(dir_path_for_job_outputs, "Correlation_heatmap.png")
+            # place in static dir
+            dest_dir_path_for_correlation_png = get_static_dir_for_job(job_id)
+
+            # create destination dir first
+            Path(dest_dir_path_for_correlation_png).mkdir(parents=True, exist_ok=True)
+
+            # path to the file within that dir
+            correlation_png_destination_file_path = os.path.join(dest_dir_path_for_correlation_png, "Correlation_heatmap.png")
+
+            os.rename(correlation_png_source_file_path, correlation_png_destination_file_path)
+
+        except Exception as e:
+            # don't want the whole thing to fail if the matlab part doesn't run
+            print(e)
+            print("failed to move correlation heatmap, just continue on without that")
+
 
 
     return payload
@@ -192,6 +214,14 @@ def check_matlab_job_status(job_id):
         # unzip_osparc_outputs will namespace by job id
         static_dir_for_job = os.path.join(static_dir, "jobs-results")
         dir_path_for_job_outputs = unzip_osparc_outputs(job_id, payload["download_path"], static_dir_for_job)
+
+        # let's send the matlab json as well
+        final_json_file_path = os.path.join(dir_path_for_job_outputs, "matlab_output.json")
+        plaintext_response = Path(final_json_file_path).read_text()
+
+        payload["outputs"] = {
+            "matlab_output": json.loads(plaintext_response)
+        }
 
     # don't need to return outputs to the front end, just tell the front and that we are done, and frontend can then retrieve images from the flask static folder
     return payload
@@ -371,6 +401,7 @@ def unzip_osparc_outputs(job_id, download_path, target_unzip_dir_path):
     @return dir_path_for_job_outputs, where the unzipped files got put
     """
     # namespace using subdirectory based on job id
+    # TODO use get_static_dir_for_job instead, to DRY up code
     dir_path_for_job_outputs = os.path.join(target_unzip_dir_path, job_id)
 
     # make sure target dir exists if not already
@@ -379,5 +410,13 @@ def unzip_osparc_outputs(job_id, download_path, target_unzip_dir_path):
     # dir where the outputs will be written 
     with zipfile.ZipFile(download_path, 'r') as zip_ref:
         zip_ref.extractall(dir_path_for_job_outputs)
+
+    return dir_path_for_job_outputs
+
+def get_static_dir_for_job(job_id):
+    """
+    takes job_id and returns the static dir for that job, where frontend can access it
+    """
+    dir_path_for_job_outputs = os.path.join(static_dir, "jobs-results", job_id)
 
     return dir_path_for_job_outputs
