@@ -64,7 +64,7 @@ git push heroku main
 # TODOs
 - use production server, rather than dev server
 - build a new docker image (current one is outdated)
-- ```
+```
 # remove old container 
 docker stop flask-for-podcast-tool
 docker rm flask-for-podcast-tool
