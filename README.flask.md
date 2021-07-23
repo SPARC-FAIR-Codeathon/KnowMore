@@ -2,6 +2,8 @@
 ![architecture diagram](/docs/knowmore.osparc-integration.png)
 
 # Setup
+
+## Clone repo
 Clone the repo and submodules
 ```
 git clone https://github.com/SPARC-FAIR-Codeathon/KnowMore.git --recurse
@@ -9,26 +11,30 @@ git clone https://github.com/SPARC-FAIR-Codeathon/KnowMore.git --recurse
 ## Setup Flask
 ### cd into the root folder of this repo
 
+Open Anaconda prompt (Windows) or the system Command line interface then naviguate to the KnowMore folder
 ```sh
 cd ./KnowMore
 ```
 
-### Setup venv
+### Setup conda env
 ```sh
-python3 -m venv venv
-. venv/bin/activate
+conda create -n "knowmore-flask-env" python=3.6
+conda activate knowmore-flask-env
 ```
 
 ### Install Python dependencies
 ```sh
+conda install pip
 pip install -r requirements.txt
 ```
 
 ### Setup env vars
+The environment variables required are listed in the table below along with information on how to get them
+
+Each of them can be set in your conda environment as follows
 ```sh
-cp .env.example .env
+conda env config vars set MY_VAR=something MY_OTHER_VAR=something_else
 ```
-Then change according to your environment
 
 ### start flask server
 ```sh
@@ -45,26 +51,20 @@ flask run --host=0.0.0.0
 http://127.0.0.1:5000/
 
 ## Test mode
-Want to develop without starting tons of osparc jobs? 
+Want to develop without starting the osparc jobs? 
 
 set env var (to anything other than string 'false')
 OSPARC_TEST_MODE=true
 
 # Deploy
-
 ```
 git push heroku main
 ```
 
-# Develop
-## Start in Docker
-**NOTE: HASN'T BEEN TESTED RECENTLY**
-```
-docker-compose  up -d
-```
-
-## Build a new docker image
-```
+# TODOs
+- use production server, rather than dev server
+- build a new docker image (current one is outdated)
+- ```
 # remove old container 
 docker stop flask-for-podcast-tool
 docker rm flask-for-podcast-tool
@@ -75,9 +75,6 @@ docker build -t flask-for-podcast-image .
 # start it again
 docker run --name flask-for-podcast-tool -p 5000:5000 flask-for-podcast-image:latest
 ```
-
-# TODOs
-- use production server, rather than dev server
 
 # Debugging
 ## Helpful scripts
