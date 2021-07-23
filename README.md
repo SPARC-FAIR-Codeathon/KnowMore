@@ -139,9 +139,9 @@ Under the hood, KnowMore uses several Machine Learning and Data Science workflow
 
 ## Workflow
 The overall workflow of KnowMore is shown in the figure below. Our architecture consists of three main blocks that can all run independently:
-1. The front end of our app is based on a fork of the sparc-app where we have integrated additional UI elements and back-end logic for KnowMore. 
+1. The front end of our app is based on a fork of the sparc-app where we have integrated additional UI elements and back-end logic for KnowMore. [Learn more about the sparc app](https://github.com/nih-sparc/sparc-app).
 2. The back-end consists of a Flask application that listen to front-end requests and launches the data processing jobs. 
-3. The data processing and results generation is done through a Matlab code (for 'MAT' data files) and Python code (all other files) that are submitted to osparc.
+3. The data processing and results generation is done through a Matlab code (for 'MAT' data files) and Python code (all other datatypes) that are submitted to osparc. [Learn more about osparc](http://docs.osparc.io/).
 
 <br/>
 <p align="center">
@@ -152,10 +152,10 @@ The overall workflow of KnowMore is shown in the figure below. Our architecture 
  </p> 
 <br/>
 
-Such an architecture was motivated by our aim to make the elements KnowMore fully interoperable as well as ready to on-board the SPARC Data Portal:
-* Integrating the front-end of KnowMore would only require to merge our fork of the sparc-app with the main branch sparc-app branch
-* The back-end of the sparc-app, the sparc-api, is build as a Flask application so the KnowMore back-end would be readily compatible
-* The data processing jobs are designed to run on osparc and would not require any type of integration
+Such an architecture was motivated by our aim to make the elements of KnowMore fully interoperable as well as ready to on-board the SPARC Data Portal:
+* Integrating the front-end of KnowMore would only require to merge our fork of the sparc-app with the main branch sparc-app branch.
+* The back-end of the sparc-app, the [sparc-api](https://github.com/nih-sparc/sparc-api), is build as a Flask application so the KnowMore back-end would be readily compatible.
+* The data processing jobs are designed to run on osparc and would not require any type of integration as our back-end ensure communication with osparc.
 
 ## Usecase
 Our development and testing revolved around these three datasets: 
