@@ -1,6 +1,9 @@
 # Overview
 ![architecture diagram](/docs/knowmore.osparc-integration.png)
 
+# Prerequisites 
+We recommend using Anaconda to create and manage your development environments for KnowMore. All the subsequent instructions are provided assuming you are using [Anaconda (Python 3 version)](https://www.anaconda.com/products/individual).
+
 # Setup
 
 ## Clone repo
