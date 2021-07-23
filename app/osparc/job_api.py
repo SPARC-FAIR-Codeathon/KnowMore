@@ -215,13 +215,21 @@ def check_matlab_job_status(job_id):
         static_dir_for_job = os.path.join(static_dir, "jobs-results")
         dir_path_for_job_outputs = unzip_osparc_outputs(job_id, payload["download_path"], static_dir_for_job)
 
-        # let's send the matlab json as well
-        final_json_file_path = os.path.join(dir_path_for_job_outputs, "matlab_output.json")
-        plaintext_response = Path(final_json_file_path).read_text()
+        # let's send the matlab json as well...if we can
+        # TODO fix the json, right now there's some commas that are messesd up. So for now make this optinoal
+        try:
+            final_json_file_path = os.path.join(dir_path_for_job_outputs, "matlab_output.json")
+            plaintext_response = Path(final_json_file_path).read_text()
 
-        payload["outputs"] = {
-            "matlab_output": json.loads(plaintext_response)
-        }
+            payload["outputs"] = {
+                "matlab_output": json.loads(plaintext_response)
+            }
+
+        except Exception as e:
+            # any other exception
+            print("INTERNAL FLASK SERVER ERROR:")
+            print(e)
+            print("don't need it, continuing on")
 
     # don't need to return outputs to the front end, just tell the front and that we are done, and frontend can then retrieve images from the flask static folder
     return payload
