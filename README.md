@@ -147,10 +147,12 @@ The overall workflow of KnowMore is shown in the figure below. The front end of 
 <br/>
 
 ## Usecase
-Our development and testing revolved around these three datasets so we suggest to these only for most interesting results although the code is not specific to them and works for any datasets:
+Our development and testing revolved around these three datasets: 
 * [Quantified Morphology of the Rat Vagus Nerve](https://doi.org/10.26275/ilb9-0e2a)
 * [Quantified Morphology of the Pig Vagus Nerve](https://doi.org/10.26275/maq2-eii4)
 * [Quantified Morphology of the Human Vagus Nerve with Anti-Claudin-1](https://doi.org/10.26275/nluu-1ews)
+
+They were selected due to their common theme with the aim of making some interesting and meaningful discoveries during the Codeathon. Our discoveries from these datasets are discussed in the [draft of our manuscript]() initiated during the Codeathon. Our results can be reproduced by selecting these dataset when using KnowMore (see next section). We would like to emphasize that our tool is not specifically designed around these datasets and is intended to work with any user selected datasets. 
 
 ## Using KnowMore
 You can use KnowMore directly on our fork of the SPARC Data Portal: (add link)
@@ -164,7 +166,9 @@ Follow the steps described below:
 ## Using the Source Code
 The front end of our app is based on a fork of the sparc-app. The documentation for using/editing it is [available here](https://github.com/RyanQuey/sparc-app/tree/84ab5df2203ef0a551051cf0ac037762dbc4e7dc).
 
-Our back-end consists of a flask-server that communicates with osparc. The documentation for using/editing it is [available here](https://github.com/SPARC-FAIR-Codeathon/KnowMore/blob/main/README.flask.md).
+Our back-end consists of a flask-server that run our data processing code on osparc based on front-end requests. The documentation for using/editing it is [available here](https://github.com/SPARC-FAIR-Codeathon/KnowMore/blob/main/README.flask.md).
+
+Our code running on osparc consist a Matlab code for handling mat files (when found in a dataset) and a Python code for all other datatypes. The documentation for using/editing it is [available here](https://github.com/SPARC-FAIR-Codeathon/KnowMore/blob/main/README.flask.md).
 
 ## License
 KnowMore is fully Open Source and distributed under the very permissive MIT License. See [LICENSE](https://github.com/SPARC-FAIR-Codeathon/KnowMore/blob/main/LICENSE) for more information.
