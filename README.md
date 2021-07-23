@@ -178,8 +178,8 @@ KnowMore is fully Open Source and distributed under the very permissive MIT Lice
 ## Team
 * [Bhavesh Patel](https://github.com/bvhpatel/) (Lead)
 * [Ryan Quey](https://github.com/RyanQuey) (SysAdmin)
-* [Anmol Kiran](https://github.com/codemeleon) (Writer - Documentation)
 * [Matthew Schiefer](https://github.com/schiefma/) (Writer - Manuscript)
+* [Anmol Kiran](https://github.com/codemeleon) (Writer - Documentation)
 
 ## Acknowledgements
 [contributors-shield]: https://img.shields.io/github/contributors/SPARC-FAIR-Codeathon/KnowMore.svg?style=flat-square
