@@ -205,7 +205,7 @@ KnowMore is fully Open Source and distributed under the very permissive MIT Lice
 * [Anmol Kiran](https://github.com/codemeleon) (Writer - Documentation)
 
 ## Acknowledgements
-
+We would like to thank the organizers of the 2021 SPARC Codeathon and thank the [SPARC Data Ressource Center (DRC) teams](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8265045/) for their guidance and help during this Codeathon.
 
 
 [contributors-shield]: https://img.shields.io/github/contributors/SPARC-FAIR-Codeathon/KnowMore.svg?style=flat-square
