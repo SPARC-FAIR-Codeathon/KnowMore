@@ -178,7 +178,7 @@ We recommend using Anaconda to create and manage your development environments f
 ### Running the app
 To use the source code, clone or download the repository first.
 ```
-git clone https://github.com/SPARC-FAIR-Codeathon/KnowMore.git
+git clone https://github.com/SPARC-FAIR-Codeathon/KnowMore.git --recurse
 ```
 
 Run our back-end flask-server following the documentation [available here](https://github.com/SPARC-FAIR-Codeathon/KnowMore/blob/main/README.flask.md).
