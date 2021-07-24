@@ -131,13 +131,4 @@ dmypy.json
 run-manual-job.sh
 static/**
 !static/.placeholder
-assets/INPUT_FOLDER/tmp/fake-uuid-for-sample-data/INPUT_FOLDER/input.xlsx
-assets/INPUT_FOLDER/tmp/fake-uuid-for-sample-data/INPUT_FOLDER/input.xlsx
-assets/INPUT_FOLDER/tmp/fake-uuid-for-sample-data/INPUT_FOLDER/matlab-input-folder.zip
-assets/INPUT_FOLDER/tmp/fake-uuid-for-sample-data/INPUT_FOLDER/matlab-input-folder/matlab-input-folder/matlab_data/60/derivative/RatVNMorphology_OutputMetrics.mat
-assets/INPUT_FOLDER/tmp/fake-uuid-for-sample-data/INPUT_FOLDER/matlab-input-folder/matlab-input-folder/matlab_data/64/derivative/PigVNMorphology_OutputMetrics.mat
-assets/INPUT_FOLDER/tmp/fake-uuid-for-sample-data/INPUT_FOLDER/matlab-input-folder/matlab-input-folder/matlab_data/65/derivative/CadaverVNMorphology_OutputMetrics.mat
-assets/INPUT_FOLDER/tmp/fake-uuid-for-sample-data/INPUT_FOLDER/matlab-input-folder/matlab-input-folder/matlab_input.xlsx
-assets/INPUT_FOLDER/tmp/fake-uuid-for-sample-data/OUTPUT_FOLDER/Correlation_heatmap.svg
-assets/INPUT_FOLDER/tmp/fake-uuid-for-sample-data/OUTPUT_FOLDER/matlab-input-folder.zip
-assets/INPUT_FOLDER/tmp/fake-uuid-for-sample-data/OUTPUT_FOLDER/matlab-input-folder/matlab_input.xlsx
+assets/INPUT_FOLDER/
