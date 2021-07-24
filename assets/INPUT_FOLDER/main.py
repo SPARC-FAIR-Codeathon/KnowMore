@@ -318,19 +318,33 @@ def get_image_files(datasetId):
     return datafile_image
 
 def get_image_files_biolucida(datasetId):
-    datafile_image = {}
     url = "https://sparc.biolucida.net/api/v1/imagemap/search_dataset/discover/" + datasetId
     payload={}
     headers = {
       'token': ''
     }
-    
     response = requests.request("GET", url, headers=headers, data=payload)
+    datafile_image = json.loads(response.text)
+    return datafile_image
     
-    print(response.text)
-    
-#get_image_files_biolucida('60')
-
+def get_images_all_datasets(list_datasetId):
+    for datasetId in list_datasetId:
+        datafile_image = get_image_files_biolucida(datasetId)
+        for item in datafile_image["dataset_images"]:
+            print(item)
+            image_link = item["share_link"]
+            print(image_link)
+            url = image_link
+            
+            payload={}
+            headers = {
+              'token': ''
+            }
+            
+            response = requests.request("GET", url, headers=headers, data=payload)
+            #print(response.text)
+    return datafile_image
+                    
 # data processing
 def get_knowledge_graph_data(datasetId):
     # get species information from subjects file
@@ -416,7 +430,7 @@ def get_all_datasets_text(list_datasetId):
         # text from dataset description
         data_text[datasetId]['description'] = get_dataset_description_text(
             datasetId)
-        # text from protocol all nice and cleaned, includes title, description
+        # text from protocol all nice and clean, includes title, description
         # and protocol steps
         data_text[datasetId]['protocol'] = get_protocolsio_text(datasetId)
         # text from any txt file in the dataset except license files
@@ -425,17 +439,7 @@ def get_all_datasets_text(list_datasetId):
 
 
 def get_keywords(data_text):
-    # combine text for each dataset
-
     # clean up text (remove stopwords etc.)
-
-    # run keyword indentifier
-
-    # this is an example with randomly generated keywords by be
-    # we need a json format structure with keyword and their "weight"
-    # I suggest we choose the weight as the minimum number of times a word is detected in a dataset text
-    # so if the weight is 15, it means that the given word appears at least 15 times in each dataset
-    # keep to 20 words
     top_words = 20
     index = []
     all_keyword_df = []
@@ -468,21 +472,6 @@ def get_keywords(data_text):
         "min_in_sample", ascending=False).head(top_words)
     # print(all_keyword_df.to_json())
     return all_keyword_df['min_in_sample'].to_dict()  # .to_json()
-
-    # keywords_json['vagus'] = 15
-    # keywords_json['nerve'] = 12
-    # keywords_json['morphology'] = 10
-    # keywords_json['staining'] = 9
-    # keywords_json['diameter'] = 8
-    # keywords_json['nerve'] = 7
-    # keywords_json['experiment'] = 5
-    # keywords_json['lab'] = 6
-    # keywords_json['segmentation'] = 5
-    # keywords_json['fascicle'] = 4
-    # keywords_json['nerve'] = 3
-
-    # return keywords_json
-
 
 def get_abstract(data_text):
     # combine text from all datasets
