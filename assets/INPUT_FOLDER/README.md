@@ -71,6 +71,6 @@ $ conda env config vars set MY_VAR=value1 MY_OTHER_VAR=value2
 Edit and test the main.py file with your favorite text editor.
 
 ## Setup for the Matlab code
-The Matlab code was developed and tested with Matlab 9.8.
+The Matlab code was developed and tested with Matlab 2020a.
 
 
