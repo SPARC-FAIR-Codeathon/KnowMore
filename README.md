@@ -111,7 +111,7 @@ The output of KnowMore consists of multiple interactive visualization items disp
     <td>&#9989</td>
   </tr>
   <tr>
-    <td>7. Image clustering </td>
+    <td>7. Image Clustering </td>
     <td>Comparison between image data (if any) </td>
     <td> Image files associated with the datasets from <a href="https://documenter.getpostman.com/view/8986837/SVtPXAVm"> Biolucida API </a> </td>
     <td>&#10060;</td>
