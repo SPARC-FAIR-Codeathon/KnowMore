@@ -21,7 +21,7 @@ cfg = osparc.Configuration(
 )
 
 # set some vars up front so we can adjust later if we need to not break everything
-osparc_extracted_tmp_path = "/tmp/osparc-extracted/"
+osparc_extracted_tmp_path = os.path.join("tmp", "osparc-extracted")
 
 current_dir = pathlib.Path(__file__).parent.resolve()
 
