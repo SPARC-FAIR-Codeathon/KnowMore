@@ -132,4 +132,4 @@ run-manual-job.sh
 static/**
 !static/.placeholder
 assets/INPUT_FOLDER/
-assets/INPUT_FOLDER/tmp/fake-uuid-for-sample-data/INPUT_FOLDER/input.json
+tmp/
