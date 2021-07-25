@@ -72,7 +72,7 @@ The output of KnowMore consists of multiple interactive visualization items disp
 </thead>
 <tbody>
   <tr>
-    <td>1. Knowledge Graph</td>
+    <td> Knowledge Graph</td>
     <td>High-level connections (authors, institutions, funding organisms, etc.)</td>
     <td> 
       Dataset metadata from <a href="https://docs.pennsieve.io/reference/discover_datasets"> Pennsieve API </a> and
@@ -81,37 +81,31 @@ The output of KnowMore consists of multiple interactive visualization items disp
     <td>&#9989</td>
   </tr>
   <tr>
-    <td>2. Summary Table</td>
+    <td> Summary Table</td>
     <td>Similarities/differences in the study design</td>
     <td> Dataset metadata.json file from <a href="https://docs.pennsieve.io/reference/discover_datasets"> Pennsieve API </a> </td>
     <td>&#9989</td>
   </tr>
   <tr>
-    <td>3. Data Statistics </td>
-    <td>Similarities/differences in datatypes</td>
-    <td> Dataset metadata.json file from <a href="https://docs.pennsieve.io/reference/discover_datasets"> Pennsieve API </a> </td>
-    <td>&#10060;</td>
-  </tr>
-  <tr>
-    <td>4. Common Keywords </td>
+    <td> Common Keywords </td>
     <td>Common themes</td>
     <td> Dataset metadata.json file and all dataset text files from <a href="https://docs.pennsieve.io/reference/discover_datasets"> Pennsieve API </a>, protocol text from <a href="https://www.protocols.io/developers"> protocols.io API</a> </td>
     <td>&#9989</td>
   </tr>
   <tr>
-    <td>5. Abstract </td>
+    <td> Abstract </td>
     <td>Common study design and findings </td>
     <td> Dataset metadata.json file and all dataset text files from <a href="https://docs.pennsieve.io/reference/discover_datasets"> Pennsieve API</a>, protocol text from <a href="https://www.protocols.io/developers"> protocols.io API</a> </td>
     <td>&#9989</td>
   </tr> 
   <tr>
-    <td>6. Data Plots </td>
+    <td> Data Plots </td>
     <td>Comparison  between measured numerical data (if any) </td>
     <td> MAT files in the derivative folder of the datasets on <a href="https://docs.pennsieve.io/reference/discover_datasets"> Pennsieve API</a> </td>
     <td>&#9989</td>
   </tr>
   <tr>
-    <td>7. Image Clustering </td>
+    <td> Image Clustering </td>
     <td>Comparison between image data (if any) </td>
     <td> Image files associated with the datasets from <a href="https://documenter.getpostman.com/view/8986837/SVtPXAVm"> Biolucida API </a> </td>
     <td>&#10060;</td>
