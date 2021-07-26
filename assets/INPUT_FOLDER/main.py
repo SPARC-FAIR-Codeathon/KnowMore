@@ -1,3 +1,11 @@
+import xlsxwriter
+import spacy
+import networkx as nx
+from nltk.cluster.util import cosine_distance
+from nltk.stem import WordNetLemmatizer
+from nltk.stem.snowball import SnowballStemmer
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize, sent_tokenize
 from PIL import Image
 import os
 import re
@@ -12,14 +20,6 @@ import shutil
 import nltk
 nltk.download('stopwords')
 nltk.download('punkt')
-from nltk.tokenize import word_tokenize, sent_tokenize
-from nltk.corpus import stopwords
-from nltk.stem.snowball import SnowballStemmer
-from nltk.stem import WordNetLemmatizer
-from nltk.cluster.util import cosine_distance
-import networkx as nx
-import spacy
-import xlsxwriter
 
 # NOTE: To install the library
 # TODO: pip install https://s3-us-west-2.amazonaws.com/ai2-s2-scispacy/releases/v0.4.0/en_core_sci_md-0.4.0.tar.gz
@@ -43,7 +43,7 @@ else:
 matlab_input_folder_name = 'matlab-input-folder'
 matlab_input_save_folder = os.path.join(output_dir, matlab_input_folder_name)
 
-#helper functions
+# helper functions
 
 nlp = spacy.load("en_core_sci_md")
 stop_words = set(stopwords.words("english"))
@@ -51,10 +51,12 @@ stemmer = SnowballStemmer("english")  # PorterStemmer()
 lemmatizer = WordNetLemmatizer()
 tokenizer = nltk.RegexpTokenizer(r"\w+")
 
+
 def keywords_finder(text):
     """Return keywords after removing list of not required words."""
     words = nlp(text).ents
     return words
+
 
 def NestedDictValues(d):
     for v in d.values():
@@ -64,6 +66,8 @@ def NestedDictValues(d):
             yield v
 
 # summariser
+
+
 def sentence_similarity(sent1, sent2, stopwords=None):
     if stopwords is None:
         stopwords = []
@@ -124,40 +128,40 @@ def summariser(merged_text, top_n=5):
     return " ".join(summarize_text)
 
 
-def summariser2(merged_text):
-    # TODO: Compare sentences and remove duplicates as text are from multiple ids
-    stopWords = set(stopwords.words("english"))
-    words = word_tokenize(merged_text)
-    freqTable = dict()
-    for word in words:
-        word = word.lower()
-        if word in stopWords:
-            continue
-        if word not in freqTable:
-            freqTable[word] = 0
-        freqTable[word] += 1
+# def summariser2(merged_text):
+    # # TODO: Compare sentences and remove duplicates as text are from multiple ids
+    # stopWords = set(stopwords.words("english"))
+    # words = word_tokenize(merged_text)
+    # freqTable = dict()
+    # for word in words:
+    # word = word.lower()
+    # if word in stopWords:
+    # continue
+    # if word not in freqTable:
+    # freqTable[word] = 0
+    # freqTable[word] += 1
 
-    sentences = sent_tokenize(merged_text)
-    sentenceValue = dict()
+    # sentences = sent_tokenize(merged_text)
+    # sentenceValue = dict()
 
-    for sentence in sentences:
-        for word, freq in freqTable.items():
-            if word in sentence.lower():
-                if sentence not in sentenceValue:
-                    sentenceValue[sentence] = freq
-                else:
-                    sentenceValue[sentence] += freq
+    # for sentence in sentences:
+    # for word, freq in freqTable.items():
+    # if word in sentence.lower():
+    # if sentence not in sentenceValue:
+    # sentenceValue[sentence] = freq
+    # else:
+    # sentenceValue[sentence] += freq
 
-    sumValues = sum(sentenceValue.values())
-    average = int(sumValues/len(sentenceValue))
-    summary = ""
-    for sentence in sentences:
-        try:
-            if sentenceValue[sentence] > 1.2 * average:
-                summary += " "+sentence
-        except KeyError:
-            continue
-    return summary
+    # sumValues = sum(sentenceValue.values())
+    # average = int(sumValues/len(sentenceValue))
+    # summary = ""
+    # for sentence in sentences:
+    # try:
+    # if sentenceValue[sentence] > 1.2 * average:
+    # summary += " "+sentence
+    # except KeyError:
+    # continue
+    # return summary
 
 # functions to get dataset from various sparc ressources
 def get_dataset_latest_version(datasetId):
@@ -188,7 +192,8 @@ def get_dataset_file_response(datasetId, filepath):
         return response
     else:
         return response.reason
-    
+
+
 def get_dataset_file_download(datasetId, filepath):
     versionId = get_dataset_latest_version(datasetId)
 
@@ -203,6 +208,7 @@ def get_dataset_file_download(datasetId, filepath):
 
     response = requests.request("POST", url, json=payload, headers=headers)
     return response
+
 
 def get_dataset_description_text(datasetId):
     filepath = "readme.md"
@@ -230,12 +236,13 @@ def get_dataset_protocolsio_link(datasetId):
         protocol_url = json_protocol['records'][0]['properties']['url']
     return protocol_url
 
+
 def get_protocolsio_text(datasetId):
     data_protocol = {}
     protocol_url = get_dataset_protocolsio_link(datasetId)
     if protocol_url:
         doi = protocol_url.rsplit('/', 1)[-1]
-    
+
         url = "https://www.protocols.io/api/v3/protocols/" + str(doi)
         querystring = {
             "Authorization": "76d6ca8285076f48fe611091fd97eab4bc1c65051da75d7dc70ce746bd64dbe6"}
@@ -251,14 +258,16 @@ def get_protocolsio_text(datasetId):
             data_protocol['title'] = protocol_title
             protocol_description = protocol_json["protocol"]['description']
             cleanr = re.compile('<.*?>')
-            protocol_description_clean = re.sub(cleanr, '', protocol_description)
+            protocol_description_clean = re.sub(
+                cleanr, '', protocol_description)
             data_protocol['description'] = protocol_description_clean
             steps_text = ""
             for step in protocol_json["protocol"]["steps"]:
                 for item in step['components']:
                     if item['type_id'] == 1:
                         step_description = item['source']['description']
-                        step_description_cleaned = re.sub(cleanr, '', step_description)
+                        step_description_cleaned = re.sub(
+                            cleanr, '', step_description)
                         steps_text = steps_text + " " + step_description_cleaned
             data_protocol['steps'] = steps_text
 
@@ -321,16 +330,18 @@ def get_image_files(datasetId):
                 pass
     return datafile_image
 
+
 def get_image_files_biolucida(datasetId):
     url = "https://sparc.biolucida.net/api/v1/imagemap/search_dataset/discover/" + datasetId
-    payload={}
+    payload = {}
     headers = {
-      'token': ''
+        'token': ''
     }
     response = requests.request("GET", url, headers=headers, data=payload)
     datafile_image = json.loads(response.text)
     return datafile_image
-    
+
+
 def get_images_all_datasets(list_datasetId):
     for datasetId in list_datasetId:
         datafile_image = get_image_files_biolucida(datasetId)
@@ -339,17 +350,20 @@ def get_images_all_datasets(list_datasetId):
             image_link = item["share_link"]
             print(image_link)
             url = image_link
-            
-            payload={}
+
+            payload = {}
             headers = {
-              'token': ''
+                'token': ''
             }
-            
-            response = requests.request("GET", url, headers=headers, data=payload)
-            #print(response.text)
+
+            response = requests.request(
+                "GET", url, headers=headers, data=payload)
+            # print(response.text)
     return datafile_image
-                    
+
 # data processing
+
+
 def get_knowledge_graph_data(datasetId):
     # get species information from subjects file
     # get specimen type and specimen anatomical location from samples.xlsx
@@ -391,7 +405,7 @@ def get_summary_table_data(datasetId):
     data_table_summary['Subtitle'] = manifest_json['description']
     data_table_summary['Publication_date'] = manifest_json['datePublished']
 
-    #subjects file
+    # subjects file
     filepath = "files/subjects.xlsx"
     response = get_dataset_file_response(datasetId, filepath)
     with io.BytesIO(response.content) as fh:
@@ -412,22 +426,22 @@ def get_summary_table_data(datasetId):
             data_table_summary['Age'] = str(age_values[0])
     else:
         data_table_summary['Age'] = 'NA'
-        
+
     if 'sex' in df.keys():
         sex_values = list(set(df['sex'].values.tolist()))
         data_table_summary['Sex'] = sex_values
     else:
         data_table_summary['Sex'] = 'NA'
 
-    #samples file
+    # samples file
     filepath = "files/samples.xlsx"
     response = get_dataset_file_response(datasetId, filepath)
     with io.BytesIO(response.content) as fh:
         df = pd.io.excel.read_excel(fh, engine='openpyxl')
     df.dropna(axis=0, how='all', inplace=True)
-    
+
     data_table_summary['Number of samples'] = len(df)
-    
+
     if 'specimen type' in df.keys():
         data_table_summary['Specimen type'] = df['specimen type'].values[0]
     else:
@@ -495,6 +509,7 @@ def get_keywords(data_text):
     # print(all_keyword_df.to_json())
     return all_keyword_df['min_in_sample'].to_dict()  # .to_json()
 
+
 def get_abstract(data_text):
     # combine text from all datasets
 
@@ -549,12 +564,12 @@ def get_text_correlation(data_text):
                 cor_matrix["to dataset ID"].append(c1)
                 cor_matrix["value"].append(1)
             if c1 < c2:
-                # tdata = all_keyword_df[~(
-                # (all_keyword_df[c1] == 0) & (all_keyword_df[c2] == 0))]
-                # value = len(tdata[tdata[c1] == tdata[c2]])/len(tdata)
+                tdata = all_keyword_df[~(
+                    (all_keyword_df[c1] == 0) & (all_keyword_df[c2] == 0))]
+                value = len(tdata[tdata[c1] == tdata[c2]])/len(tdata)
 
-                value = len(
-                    all_keyword_df[all_keyword_df[c1] == all_keyword_df[c2]])*1./df_len
+                # value = len(
+                # all_keyword_df[all_keyword_df[c1] == all_keyword_df[c2]])*1./df_len
                 cor_matrix["from dataset ID"].append(c1)
                 cor_matrix["to dataset ID"].append(c2)
                 cor_matrix["from dataset ID"].append(c2)
@@ -564,7 +579,7 @@ def get_text_correlation(data_text):
     cor_matrix = pd.DataFrame(cor_matrix)
     cor_matrix = cor_matrix.pivot(
         index="from dataset ID", columns="to dataset ID", values="value")
-    
+
     plot = sns.heatmap(cor_matrix, cmap='coolwarm', vmin=0, vmax=1)
     fig = plot.get_figure()
     fig.savefig(os.path.join(output_dir, "Correlation_heatmap.png"), dpi=200)
@@ -573,14 +588,15 @@ def get_text_correlation(data_text):
 
     return cor_matrix.to_json()
 
+
 def get_all_datasets_mat_files(list_datasetId):
     if os.path.isdir(matlab_input_save_folder):
-        #delete any existing output matlab folder
+        # delete any existing output matlab folder
         shutil.rmtree(matlab_input_save_folder)
-    os.makedirs(matlab_input_save_folder)  
-    
+    os.makedirs(matlab_input_save_folder)
+
     matlab_data_folder = os.path.join(matlab_input_save_folder, 'matlab_data')
-    os.makedirs(matlab_data_folder) 
+    os.makedirs(matlab_data_folder)
     df = pd.DataFrame()
     full_datasetId_list = []
     filepath_list = []
@@ -588,43 +604,47 @@ def get_all_datasets_mat_files(list_datasetId):
         if datasetId in ['60', '64', '65']:
             dataset_mat = get_dataset_mat_files(datasetId)
             if dataset_mat:
-                datasetId_path = os.path.join(matlab_data_folder, str(datasetId))
+                datasetId_path = os.path.join(
+                    matlab_data_folder, str(datasetId))
                 os.makedirs(datasetId_path)
                 for filepath in dataset_mat.keys():
-                    #matlab-input.xlsx data
+                    # matlab-input.xlsx data
                     full_datasetId_list.append(int(datasetId))
                     ps_file_path = "/".join(filepath.strip("/").split('/')[1:])
                     filepath_list.append(ps_file_path)
-                    
-                    #saving mat file
+
+                    # saving mat file
                     mat_file_name = os.path.basename(ps_file_path)
-                    mat_file_folder = os.path.join(datasetId_path, 'derivative')
+                    mat_file_folder = os.path.join(
+                        datasetId_path, 'derivative')
                     if not os.path.isdir(mat_file_folder):
-                        os.makedirs(mat_file_folder) 
-                    mat_file_path = os.path.join(mat_file_folder, mat_file_name)                
+                        os.makedirs(mat_file_folder)
+                    mat_file_path = os.path.join(
+                        mat_file_folder, mat_file_name)
                     response = dataset_mat[filepath]
                     with open(mat_file_path, 'wb') as f:
                         f.write(response.content)
     #                with open(mat_file_path, 'w', encoding="utf-8") as f:
     #                    f.write(response.text)
-    if len(full_datasetId_list)>0:
+    if len(full_datasetId_list) > 0:
         df["datasetId"] = full_datasetId_list
         df["filepath"] = filepath_list
-        matlab_excel_file = os.path.join(matlab_input_save_folder, 'matlab_input.xlsx')
-        df.to_excel(matlab_excel_file, sheet_name='Sheet1', 
-                    engine = 'xlsxwriter', index=False)
+        matlab_excel_file = os.path.join(
+            matlab_input_save_folder, 'matlab_input.xlsx')
+        df.to_excel(matlab_excel_file, sheet_name='Sheet1',
+                    engine='xlsxwriter', index=False)
 #        pd.read_csv(io.StringIO(df.to_csv(index=False)), header=None).to_excel(
 #                matlab_excel_file, header=None, index=None)
         output_zip_folder = os.path.join(matlab_input_save_folder + ".zip")
         if os.path.exists(output_zip_folder):
             os.remove(output_zip_folder)
-            
+
         shutil.make_archive(matlab_input_save_folder, 'zip', output_dir,
                             matlab_input_folder_name)
     return
 
 #from scipy.io import loadmat
-#def get_mat_files_data(list_datasetId):
+# def get_mat_files_data(list_datasetId):
 #    #all_mat_files = {}
 #    list_keys_exclude = ["__header__", "__version__", "__globals__", 'thkperi_um']
 #    level1_list = ['sub_sam', 'laterality', 'level', 'sex']
@@ -639,7 +659,7 @@ def get_all_datasets_mat_files(list_datasetId):
 #                    response = dataset_mat[filepath]
 #                    fh = io.BytesIO(response.content)
 #                    mat_file = loadmat(fh)
-#                    #all_mat_files[datasetId] = mat_file    
+#                    #all_mat_files[datasetId] = mat_file
 #                    fh.close()
 #                    df = pd.DataFrame()
 #                    sort_v = dataset_sub_sort[datasetId]
@@ -661,9 +681,9 @@ def get_all_datasets_mat_files(list_datasetId):
 #                            if ar:
 #                                df[key] = ar
 #    print(df)
-#    return mat_file    
- 
-        
+#    return mat_file
+
+
 # Test
 print("start")
 input_file = os.path.join(input_dir, 'input.json')
@@ -676,13 +696,13 @@ list_datasetId = [str(x) for x in list_datasetId]
 # storage dict to be saved as a json and returned to front-end
 dataset_data = {}
 
-## knowledge graph data
+# knowledge graph data
 #dataset_data['knowledge_graph'] = {}
-#for datasetId in list_datasetId:
+# for datasetId in list_datasetId:
 #    dataset_data['knowledge_graph'][datasetId] = get_knowledge_graph_data(
 #            datasetId)
 
-## summary table
+# summary table
 print("summary table")
 dataset_data['summary table'] = {}
 for datasetId in list_datasetId:
@@ -691,7 +711,7 @@ for datasetId in list_datasetId:
 
 # keywords
 print("dataset text")
-data_text = get_all_datasets_text(list_datasetId) 
+data_text = get_all_datasets_text(list_datasetId)
 print("keywords")
 keywords = get_keywords(data_text)
 dataset_data['keywords'] = keywords
@@ -701,15 +721,15 @@ print("abstract")
 abstract = get_abstract(data_text)
 dataset_data['abstract'] = abstract
 
-#text correlation matrix
+# text correlation matrix
 print("correlation")
 dataset_data['correlation_matrix'] = get_text_correlation(data_text)
-   
+
 # matlab_input files generator
 print("MAT files")
 get_all_datasets_mat_files(list_datasetId)
 
-#save output
+# save output
 output_file = os.path.join(output_dir, 'output.json')
 with open(output_file, 'w+') as f:
     json.dump(dataset_data, f, indent=4)
