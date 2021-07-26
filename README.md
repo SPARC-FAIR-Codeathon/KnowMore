@@ -37,6 +37,7 @@
 * [Using the Source Code](#using-the-source-code)
 * [Reporting issues and contributing](#reporting-issues-and-contributing)
 * [Cite us](#cite-us)
+* [FAIR practices](#fair-practices)
 * [License](#license)
 * [Team](#team)
 * [Acknowledgements](#acknowledgements)
@@ -203,6 +204,9 @@ If you use KnowMore to make new discoveries or use the source code, please cite 
 Ryan Quey, Matthew Schiefer, Anmol Kiran, Bhavesh Patel (2021). KnowMore: v1.0.0 - Automated Knowledge Discovery Tool for SPARC Datasets. 
 Zenodo. https://doi.org/10.5281/zenodo.5137255.
 ```
+
+## FAIR practices
+Given that this codeathon revolved around FAIR data, we deemed suitable to ensure that the development of KnowMore is also FAIR. We have assessed accordingly the FAIRness of KnowMore against the FAIR Principles established for research software. The details are available in this [document](https://github.com/SPARC-FAIR-Codeathon/KnowMore/blob/main/docs/FAIRness-KnowMore.pdf).
 
 ## License
 KnowMore is fully Open Source and distributed under the very permissive MIT License. See [LICENSE](https://github.com/SPARC-FAIR-Codeathon/KnowMore/blob/main/LICENSE) for more information.
