@@ -2,7 +2,7 @@
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
 [![MIT License][license-shield]][license-url]
-[![Lines of code][lines-of-code-shield]][lines-of-code-url]
+<!-- [![Lines of code][lines-of-code-shield]][lines-of-code-url] -->
 <!-- [![DOI](https://zenodo.org/badge/185270688.svg)](https://zenodo.org/badge/latestdoi/185270688) -->
 
 <!-- HEADER -->
@@ -14,9 +14,11 @@
   <br/>
   <h3 align="center">
     Say "no more" to tedious manual discovery across SPARC datasets
-  </h3
-  <p align="center"> <p>
-
+  </h3>
+  <h4 align="center">
+  <br/>
+  <a href="https://sparc-know-more.herokuapp.com/sparc-app/">Test the KnowMore prototype</a>
+  </h4>
   <p align="center">
      <br/>
     <a href="https://github.com/SPARC-FAIR-Codeathon/KnowMore/issues">Report Issue</a>
@@ -162,7 +164,7 @@ Our development and testing revolved around these three datasets:
 They were selected due to their common theme with the aim of making some interesting and meaningful discoveries during the Codeathon. Our discoveries from these datasets are discussed in the [draft of our manuscript]() initiated during the Codeathon. Our results can be reproduced by selecting these datasets when using KnowMore (see next section). We would like to emphasize that our tool is not specifically designed around these datasets and is intended to work with any user-selected datasets. Only the Data Plots are limited to work with these datasets since we found that there are many discrepancies in tabular data structuring from dataset to dataset that limited auto generation of meaningful plots. Our suggestion to SPARC is to focus on standardizing tabular data for the next update to the SPARC Data Structure for icreasing the the interoperability of SPARC datasets. Recommendations to achieve that are discussed in the draft of our manuscript.
 
 ## Using KnowMore
-You can test the current prototype of KnowMore directly on our fork of the SPARC Data Portal: (add link)
+You can test the current prototype of KnowMore directly on our fork of the SPARC Data Portal: https://sparc-know-more.herokuapp.com/sparc-app/
 
 Follow the steps described below:
 1. Find datasets of interest and click on the "Add to automated discovery" button, visible in the header of the datasets, to add each of them in the KnowMore analysis 
