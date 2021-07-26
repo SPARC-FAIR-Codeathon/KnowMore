@@ -123,7 +123,7 @@ A sample output is presented in the figure below.
 
 <br/>
 <p align="center">
-   <img src="" alt="coming-soon..." width="900">
+   <img src="https://github.com/SPARC-FAIR-Codeathon/KnowMore/blob/main/docs/knowmore-ouput.PNG" alt="coming-soon..." width="900">
   <br/> 
   <i> Sample output from KnowMore. It consists of interactive text and plots display to the user.</i>
   </img>
