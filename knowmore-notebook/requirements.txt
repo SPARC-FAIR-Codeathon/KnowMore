@@ -1,5 +1,3 @@
-Flask
-python-dotenv
-requests
-flask-cors
-osparc
+matplotlib == 3.3.4
+osparc == 0.4.3
+seaborn == 0.11.1
