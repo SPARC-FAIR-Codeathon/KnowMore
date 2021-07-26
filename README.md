@@ -22,7 +22,7 @@
   </h4>
   <p align="center">
      <br/>
-    <a href="https://github.com/SPARC-FAIR-Codeathon/KnowMore/issues">Report Issue</a>
+   <a href="https://github.com/SPARC-FAIR-Codeathon/KnowMore/blob/main/docs/KnowMore-Manuscript-v1.0.pdf">Read manuscript draft </a> . <a href="https://github.com/SPARC-FAIR-Codeathon/KnowMore/issues">Report Issue</a>
   </p>
 </p>
 
