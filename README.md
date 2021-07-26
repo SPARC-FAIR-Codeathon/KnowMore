@@ -36,6 +36,7 @@
 * [Using KnowMore](#using-knowmore)
 * [Using the Source Code](#using-the-source-code)
 * [Reporting issues and contributing](#reporting-issues-and-contributing)
+* [Cite us](#cite-us)
 * [License](#license)
 * [Team](#team)
 * [Acknowledgements](#acknowledgements)
@@ -196,6 +197,12 @@ To report an issue or suggest a new feature, use the [issue page](https://github
 
 Fork this repositery and submit a pull request to contribute. Before doing so, please read our [Code of Conduct](https://github.com/SPARC-FAIR-Codeathon/KnowMore/blob/main/CODE_OF_CONDUCT.md) and [Contributing Guidelines](https://github.com/SPARC-FAIR-Codeathon/KnowMore/blob/main/CONTRIBUTING.md).
 
+## Cite us
+If you use KnowMore to make new discoveries or use the source code, please cite us as follows
+```
+Ryan Quey, Matthew Schiefer, Anmol Kiran, Bhavesh Patel (2021). KnowMore: v1.0.0 - Automated Knowledge Discovery Tool for SPARC Datasets. 
+Zenodo. https://doi.org/10.5281/zenodo.5137255.
+```
 
 ## License
 KnowMore is fully Open Source and distributed under the very permissive MIT License. See [LICENSE](https://github.com/SPARC-FAIR-Codeathon/KnowMore/blob/main/LICENSE) for more information.
